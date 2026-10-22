@@ -1,0 +1,293 @@
+Berkas ini berisi perintah lengkap untuk membangun sebuah aplikasi web. Baca seluruh isinya dan jalankan semuanya secara berurutan dari atas ke bawah tanpa melewatkan satu bagian pun. Bagian "Sinkronisasi ke Google Sheets" (di paling bawah) dikerjakan PALING AKHIR, setelah seluruh aplikasi selesai.
+
+Buatkan aplikasi web landing page promosi bernama "Guber Smart" dengan spesifikasi berikut.
+
+PENTING: tampilan aplikasi harus bersih dan profesional seperti produk jadi, sempurna dan responsif di layar HP (menu, tombol, dan semua elemen rapi, proporsional, tidak ada yang tersembunyi), tanpa satu pun teks petunjuk, penjelasan fungsi, atau keterangan teknis (termasuk soal unggah file, Drive, Apps Script, atau spreadsheet). Hanya label, konten, pesan galat, dan notifikasi hasil aksi yang boleh tampil. Tombol, menu, dan kolom harus mudah dipakai dan dipahami lewat label yang jelas saja.
+
+## 1. Tujuan dan Pengguna
+Landing page ini mempromosikan program belajar membuat aplikasi web tanpa perlu paham koding: "Ubah ide Anda menjadi aplikasi, profesional dan mudah dipahami." Pengunjung (guru, pemilik usaha, staf kantor, mahasiswa, dan siapa saja yang punya ide aplikasi) harus langsung paham manfaatnya, merasa percaya, lalu terdorong mendaftar lewat formulir atau WhatsApp. Halaman terbuka untuk semua orang tanpa login. Admin dan superadmin mengelola seluruh isi lewat panel. Nomor WhatsApp pendaftaran dan konsultasi: 085376604024 (tautan WhatsApp memakai format internasional 6285376604024).
+
+## 2. Bahasa dan Nada
+Bahasa Indonesia, ramah, percaya diri, ringkas, dan memotivasi, tanpa istilah teknis yang menakutkan. Contoh judul: "Ubah Ide Menjadi Aplikasi, Tanpa Perlu Koding". Contoh slogan: "Belajar membuat aplikasi web, profesional dan mudah dipahami."
+
+## 3. Tampilan dan Desain
+- Warna utama: #4F46E5 (indigo), sekunder: #0F172A (biru gelap), aksen: #F97316 (oranye, khusus tombol ajakan utama), latar: #F8FAFC, kartu: #FFFFFF, teks: #0F172A, teks sekunder: #475569.
+- Mode gelap: latar #0B1120, kartu #131C31, teks #E5E7EB, tetap memakai indigo dan oranye sebagai warna merek.
+- Jenis huruf: judul "Plus Jakarta Sans", isi "Inter".
+- Kesan modern, lega, hangat, dan terpercaya: sudut membulat 16px, bayangan lembut, gradien halus indigo ke ungu pada hero, ikon garis dari satu keluarga, tombol ajakan oranye yang menonjol di setiap bagian penting, animasi muncul halus saat bagian digulir ke layar (menghormati pengaturan kurangi gerak pada perangkat).
+
+## Aturan Tampilan Profesional dan Responsif (WAJIB DIPATUHI, TANPA PENGECUALIAN)
+
+Tampilan harus seperti produk jadi yang rapi dan profesional, bukan prototipe.
+
+LARANGAN MUTLAK: TIDAK ADA SATU PUN teks petunjuk, penjelasan, atau keterangan fungsi di antarmuka. Ini berlaku untuk semua halaman, formulir, dialog, dan dashboard admin.
+
+Contoh yang DILARANG tampil di UI (dan semua kalimat serupa):
+- "Gunakan tombol ini untuk mengunggah gambar."
+- "Gambar akan disimpan ke Drive melalui Apps Script." atau penyebutan Drive, Apps Script, base64, atau cara kerja teknis apa pun.
+- "Format yang didukung: JPG, PNG. Maksimal 5 MB." (batas hanya diperiksa di kode; pesan muncul HANYA bila pengguna melanggar)
+- "Isi kolom di bawah ini...", "Klik di sini untuk...", "Fitur ini digunakan untuk...", "Catatan:", "Tips:", "Perhatian:"
+- Teks kecil abu-abu di bawah tombol, kolom, judul, atau kartu yang menjelaskan fungsinya.
+- Tooltip, balon petunjuk, tur, onboarding, banner "Cara menggunakan", badge "Baru" atau "Demo", kata simulasi/demo/mock, dan komentar pengembang.
+- Paragraf pengantar di atas formulir atau tabel.
+
+HANYA teks berikut yang boleh tampil:
+1. Konten asli aplikasi (isi berita, nama produk, data).
+2. Judul halaman dan judul bagian (satu frasa singkat).
+3. Label tombol dan menu (kata kerja singkat, 1-3 kata).
+4. Label kolom isian (satu frasa singkat, tetap tampil di atas kolom, tanda * untuk yang wajib).
+5. Pesan kesalahan validasi, hanya saat terjadi kesalahan.
+6. Notifikasi singkat hasil aksi (misalnya "Berhasil disimpan", "Gagal mengunggah") dan lencana status koneksi singkat ("Offline") saat tidak ada internet.
+7. Judul singkat keadaan kosong (misalnya "Belum ada data"), tanpa kalimat penjelasan.
+Placeholder kolom dikosongkan, atau berisi contoh isi murni (misalnya nama orang), tidak pernah berupa kalimat instruksi.
+
+MUDAH DIGUNAKAN DAN DIPAHAMI TANPA PENJELASAN:
+- Tombol berlabel kata kerja singkat yang langsung jelas (Simpan, Tambah Siswa, Unduh Laporan, Cari, Pilih Gambar). Ikon selain yang sangat umum (tutup, cari, edit, hapus, menu) selalu disertai label teks. Ikon umum diberi aria-label tersembunyi, bukan tulisan tampil.
+- Gunakan pola antarmuka yang sudah dikenal: kolom unggah berupa satu tombol "Pilih Gambar" atau "Pilih Dokumen"; setelah file dipilih tampilkan pratinjau (gambar kecil atau ikon file dengan nama file) dan ikon hapus; saat mengunggah tampilkan indikator putar pada tombol, tanpa tulisan penjelasan.
+- Satu aksi utama per layar: tombol utama berwarna aksen dan menonjol, aksi sekunder berbentuk garis tepi, aksi berbahaya berwarna merah dan meminta konfirmasi lewat dialog singkat (judul dan dua tombol saja).
+- Posisi konsisten di seluruh aplikasi: tombol Tambah di kanan atas daftar; Simpan dan Batal di kanan bawah formulir; pencarian dan filter di atas tabel; menu selalu di tempat yang sama.
+- SEMUA kolom edit atau input teks (kolom teks panjang, deskripsi, editor teks, dan sejenisnya) otomatis membesar ke bawah mengikuti isi yang diketik, tanpa bilah gulir internal dan tanpa perlu ditarik manual; tinggi awal ringkas (satu atau dua baris) dan tidak terbatas ke bawah. Berlaku di semua formulir, CMS, panel admin, HP, dan desktop.
+- Formulir dikelompokkan dalam bagian berjudul singkat, urutan kolom mengikuti urutan pikiran pengguna, kolom pilihan memakai dropdown atau pilihan bertombol dengan label jelas.
+- Menu dikelompokkan logis, memakai ikon dan label, item aktif disorot jelas.
+- Hierarki visual jelas: ukuran huruf konsisten untuk judul halaman, judul bagian, dan isi; kontras warna cukup; tabel dengan judul kolom jelas.
+
+MENU, DROPDOWN, DAN PANEL MELAYANG (dropdown pilihan, menu hamburger, menu aksi baris tabel, menu profil, pemilih tanggal, notifikasi, popover):
+- Selalu tampil penuh di dalam layar, termasuk di ponsel kecil: tidak terpotong, tidak tersembunyi di balik elemen lain, tidak membuat halaman bergeser ke samping. Menu tampil di lapisan paling atas sehingga tidak terpotong oleh kartu, kontainer, atau tabel yang bisa digulir.
+- Posisi menyesuaikan ruang: bila tidak muat di bawah, tampil ke atas; bila tidak muat di kanan, geser ke kiri. Lebar maksimum = lebar layar dikurangi 16px; tinggi maksimum = tinggi layar dikurangi 32px dengan gulir di dalam menu. Di ponsel, menu panjang atau pemilih tampil sebagai panel dari bawah (bottom sheet).
+- Menutup otomatis saat pengguna mengetuk atau mengklik di luar area menu, menekan Escape, memilih satu item, berpindah halaman, atau membuka menu lain. Hanya satu menu terbuka pada satu waktu.
+- Area sentuh tiap item minimal 44px; item aktif jelas; navigasi keyboard (panah, Enter) berfungsi di desktop.
+- Dialog (modal) juga responsif: lebar maksimum layar dikurangi 32px, isi bisa digulir, tombol aksi selalu terlihat, dan menutup bila lapisan gelap di luarnya diketuk (kecuali formulir yang sedang diisi, yang meminta konfirmasi singkat).
+
+KERAPIAN VISUAL: spasi lega, grid konsisten, tidak penuh sesak, tidak ada elemen dekoratif tanpa fungsi, ikon seragam dalam satu keluarga, bayangan dan sudut membulat konsisten.
+
+TAMPILAN HP ADALAH PRIORITAS UTAMA. Sebagian besar pengguna memakai HP, jadi semua menu, tombol, formulir, tabel, dialog, dan panel admin harus rapi, proporsional, mudah dipahami, dan mudah dioperasikan dengan satu jari di layar 360-430px. Desktop tetap rapi sebagai tampilan kedua. Tidak boleh ada tombol atau menu yang tersembunyi, berantakan, terpotong, tumpang tindih, atau tidak proporsional.
+
+MENU HAMBURGER DI HP (wajib persis seperti ini):
+- Tombol hamburger di pojok kanan atas header, area sentuh minimal 44px, berubah menjadi ikon tutup saat menu terbuka.
+- Saat dibuka, menu tampil sebagai panel laci dari sisi (lebar sekitar 85% layar) atau panel layar penuh, dengan lapisan gelap di belakangnya. SELURUH isi menu terlihat penuh di dalam layar, tidak terpotong dan tidak keluar layar.
+- Item tersusun vertikal satu kolom, rapi dan rata kiri, tinggi tiap item minimal 48px, huruf minimal 16px, jarak seragam, ikon dan label sejajar, item aktif disorot.
+- Submenu berupa akordeon di dalam panel (ketuk untuk buka/tutup), bukan dropdown melayang.
+- Jika isi menu lebih tinggi dari layar, panel bisa digulir sendiri sementara halaman di belakangnya terkunci.
+- Tombol aksi utama (misalnya Daftar atau Login) ditaruh di bagian bawah panel dan selalu terlihat.
+- Menutup otomatis saat mengetuk di luar panel, mengetuk ikon tutup, memilih item, atau berpindah halaman.
+- Header menempel di atas dengan tinggi proporsional (sekitar 56-64px) dan di HP HANYA berisi logo atau nama singkat serta ikon hamburger; tidak ada tombol tambahan (termasuk tombol login) di header. Logo dan nama singkat tidak pernah bertabrakan dengan tombol hamburger.
+- Item "Masuk" (login) adalah satu item biasa di daftar menu, item terakhir, bergaya sama dengan item lain, dan tidak boleh menggeser, menyembunyikan, atau memperkecil item menu lain. Di desktop, bila deretan menu terlalu penuh, beralih ke menu hamburger pada lebar yang lebih besar daripada membiarkan menu bertumpuk atau terpotong.
+
+STANDAR TAMPILAN HP LAINNYA:
+- Tidak ada elemen yang lebih lebar dari layar dan tidak ada gulir ke samping.
+- Semua tombol dan tautan minimal 44px dengan jarak cukup, tidak berhimpitan.
+- Huruf isi minimal 16px; judul proporsional (tidak memenuhi layar); kolom isian setinggi minimal 48px dengan huruf 16px.
+- Satu kolom; kartu penuh lebar dengan jarak samping sekitar 16px; tabel menjadi kartu bertumpuk.
+- Formulir panjang memiliki bilah aksi di bawah layar (Simpan dan Batal) yang selalu terlihat; tombol aksi penuh lebar.
+- Gambar dan video berukuran proporsional dengan rasio tetap dan tidak terpotong aneh; peta dan video profil penuh lebar.
+- Banner utama tidak lebih tinggi dari satu layar dan teks di atasnya terbaca jelas.
+- Dialog tampil sebagai panel dari bawah atau hampir penuh layar dengan tombol tutup yang jelas; tombol aksi dialog selalu terlihat.
+- Menghormati area aman layar (lekukan kamera dan bilah gestur) sehingga tombol tidak tertutup.
+- Panel admin di HP memakai pola menu laci yang sama; tabel data menjadi daftar kartu dengan menu aksi ringkas; grafik menyesuaikan lebar layar.
+- Interaksi sentuh mulus: gulir halus tanpa tersendat, gestur geser (galeri, carousel, laci menu) mengikuti jari dan berhenti rapi, tidak ada gulir ganda atau halaman terkunci, tidak ada lonjakan tampilan saat memuat.
+- Sebelum dianggap selesai, periksa setiap halaman di lebar 360px, 390px, dan 430px: tidak ada tombol tersembunyi, teks terpotong, tumpang tindih, atau elemen tidak proporsional.
+
+TABLET DAN DESKTOP: tablet (768-1024px) dua kolom bila sesuai; desktop (di atas 1024px) navigasi atas atau sidebar untuk dashboard admin, grid beberapa kolom, lebar konten dibatasi agar nyaman dibaca, tabel penuh.
+
+Seluruh penjelasan teknis (Drive, Apps Script, spreadsheet, base64, batas ukuran, tipe file) hanya berada di kode dan komentar kode, TIDAK PERNAH di tampilan. Aturan ini berlaku sama untuk dashboard admin, panel CMS, dan tab Sinkronisasi (tab ini hanya boleh berisi kotak kode, label, kolom, tombol, dan status).
+
+Perangkat utama: HP (layar 360-430px), disusul tablet dan desktop.
+
+## Aturan Desain Permanen (kunci di kode)
+Buat satu berkas aturan desain permanen di dalam proyek (misalnya di folder konstanta dengan nama designSystem) yang memuat aturan tampilan di bawah ini sebagai komentar dan konstanta. Di baris paling atas setiap komponen utama (halaman publik, panel admin, CMS, formulir, dan komponen bersama) tambahkan penanda: "// ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk." Setiap revisi atau penambahan fitur pada proyek ini WAJIB membaca dan mematuhi berkas itu lebih dulu, tanpa perlu diingatkan pengguna di setiap chat.
+
+Isi aturan:
+- Prinsip: minimalis, bersih, ringkas, dan jelas, tampil seperti produk jadi yang profesional.
+- Tanpa teks panjang: dilarang paragraf instruksi, tips, teks bantuan, atau penjelasan fungsi di seluruh tampilan, formulir, dan pengaturan CMS, termasuk penjelasan teknis (Drive, Apps Script, spreadsheet, format dan batas file).
+- Teks hanya label singkat 1-3 kata. Placeholder dikosongkan atau berisi contoh isi murni, bukan instruksi.
+- Tombol aksi (Simpan, Hapus, Kosongkan) tegas, langsung, dan fungsional, dengan label kata kerja singkat.
+- Setiap kolom gambar selalu punya tombol "Hapus Gambar" berikon tempat sampah di samping pratinjau; logo, banner, dan gambar popup juga bisa dihapus satu per satu (dan "Hapus Semua" untuk banner bila ada banyak).
+- Judul dan subjudul banner (dan teks serupa) boleh dikosongkan, dengan tombol cepat "Kosongkan". Bila teks kosong, tampilkan gambar murni tanpa gradien, lapisan gelap, atau wadah teks yang menutupi gambar.
+- Semua kolom edit atau input teks otomatis membesar ke bawah mengikuti isinya, tanpa bilah gulir internal.
+- Tidak ada gambar bawaan yang ditulis mati di kode atau komponen. Semua gambar berasal dari pengaturan yang bisa diganti atau dihapus dari panel; bila kosong tampilkan kerangka netral.
+- Visual bersih: spasi lega, tanpa elemen dekoratif tanpa fungsi, dan tampilan HP tetap rapi, proporsional, serta tidak ada elemen tersembunyi.
+- Setiap perubahan baru mempertahankan semua aturan di atas. Jika sebuah permintaan bertentangan dengan aturan ini, tetap patuhi aturan dan sampaikan secara singkat di respons, bukan di tampilan aplikasi.
+
+## Tema Terang dan Gelap
+Sediakan tepat SATU tombol pengalih tema terang/gelap di seluruh aplikasi. Tidak boleh ada tombol kedua atau duplikat di header, menu, panel admin, CMS, atau halaman lain; panel admin memakai pengalih yang sama. Tombol berupa ikon matahari/bulan yang berganti sesuai mode, ditaruh di satu tempat yang konsisten sebagai satu item pada deretan menu (di HP berada di dalam daftar menu hamburger, bukan tombol tambahan di header), tanpa menggeser atau menyembunyikan menu lain.
+Tombol itu harus benar-benar berfungsi: sekali ketuk langsung mengubah SELURUH tampilan aplikasi menjadi terang atau gelap (latar, teks, kartu, tabel, formulir, menu, dialog, grafik, panel admin, dan CMS) tanpa memuat ulang halaman dan tanpa ada elemen yang tertinggal berwarna mode sebelumnya.
+Warna kedua mode mengikuti warna tema aplikasi (warna utama, sekunder, dan aksen) yang sudah ditetapkan atau diatur di CMS, dengan kontras teks yang tetap jelas terbaca. Pilihan pengguna tersimpan dan tetap setelah halaman dimuat ulang; bila belum memilih, ikuti pengaturan tema perangkat. Gambar, logo, dan banner tetap tampil rapi di kedua mode.
+
+## 4. Struktur Halaman dan Navigasi
+Model akses: seluruh landing page terbuka untuk publik tanpa login. Panel admin dan superadmin hanya bisa dibuka setelah masuk dengan kata sandi; pengguna yang belum masuk diarahkan ke dialog login, dan menu yang tidak berhak tidak ditampilkan.
+
+Navigasi (item menu, urut): Beranda, Manfaat, Cara Kerja, Materi, Karya, Testimoni, Paket, FAQ, pengalih tema, Masuk (item terakhir). Mengetuk item menggulir halus ke bagian yang dituju, dan alamat bagian tercatat di alamat halaman. Di HP, header hanya berisi logo dan hamburger; panel hamburger memuat semua item di atas dan tombol "Daftar Sekarang" di bagian bawah panel. Tombol ajakan tidak ditaruh di header; ajakan dibawa oleh hero, bagian-bagian di bawah, bilah ajakan HP, dan tombol WhatsApp melayang.
+
+Bagian Publik (satu halaman panjang, berurutan dari atas ke bawah):
+1. Hero: lencana singkat ("Cocok untuk Pemula", "Praktik Langsung", "Mentoring"), judul besar, subjudul, dua tombol ("Daftar Sekarang" berwarna oranye, "Lihat Cara Kerja" berbentuk garis tepi), dan mockup aplikasi dalam bingkai perangkat. Tinggi tidak lebih dari satu layar HP.
+2. Bar angka: Peserta, Aplikasi Jadi, Rating, Jenis Aplikasi, dengan angka yang menghitung naik saat terlihat.
+3. Masalah dan Solusi: tiga kartu masalah, lalu satu pernyataan solusi dengan tombol ajakan.
+4. Manfaat: enam kartu ikon.
+5. Cara Kerja: tiga langkah bernomor (Ceritakan ide, Buat prompt, Aplikasi jadi) dengan garis penghubung.
+6. Materi: akordeon per modul, tiap modul berisi daftar poin yang dipelajari.
+7. Karya: galeri contoh aplikasi hasil peserta, carousel geser dengan filter jenis (Semua, Website, Toko, Administrasi); ketuk kartu membuka dialog pratinjau gambar besar dengan judul dan jenis.
+8. Video Promosi: sematan YouTube penuh lebar; bagian ini tidak tampil bila tautan kosong.
+9. Mentor: kartu profil (foto, nama, jabatan, bio singkat).
+10. Testimoni: carousel kartu (foto, nama, profesi, bintang, kutipan).
+11. Paket dan Harga: tiga kartu paket, satu ditandai "Paling Diminati"; di bawahnya kartu Bonus dan pernyataan Garansi.
+12. Urgensi: hitung mundur (hari, jam, menit, detik) dan sisa kuota dengan bilah progres.
+13. FAQ: akordeon.
+14. Formulir Pendaftaran: kolom Nama Lengkap*, Nomor WhatsApp*, Jenis Aplikasi (dropdown), Paket (dropdown), Pesan (opsional), tombol "Kirim Pendaftaran".
+15. Ajakan Penutup: judul besar dan dua tombol ("Daftar Sekarang", "Chat WhatsApp").
+16. Footer: logo, slogan, kontak, media sosial, tautan halaman statis (Kebijakan Privasi, Syarat dan Ketentuan), dan hak cipta.
+Elemen melayang: bilah ajakan tetap di bawah layar HP berisi satu tombol "Daftar Sekarang" penuh lebar (muncul setelah hero terlewat, disembunyikan saat bagian formulir terlihat), dan tombol WhatsApp bulat melayang di kanan bawah (di HP diletakkan di atas bilah ajakan, tidak bertumpuk).
+Halaman statis tambahan (dibuka dari footer): Kebijakan Privasi dan Syarat dan Ketentuan, dengan alamat sendiri dan tombol kembali ke beranda. Halaman 404 yang rapi dengan tombol "Ke Beranda".
+
+Bagian Admin (login, setelah masuk): menu laci dan sidebar berisi Dasbor, Pendaftar, Bagian Halaman, Konten Daftar, Paket dan Harga, Hitung Mundur dan Kuota, Halaman, Footer dan Kontak, Pratinjau, Kata Sandi, Keluar.
+
+Bagian Superadmin (login, hak tertinggi): semua menu Admin ditambah Identitas, Tema, Navigasi, Tombol, Fitur, Media, SEO dan Pelacak, Log Aktivitas, dan Sinkronisasi.
+
+## 5. Fitur dan Perilaku
+Bagian Publik:
+- Tombol ajakan (dipakai pengunjung): "Daftar Sekarang" menggulir ke Formulir Pendaftaran; "Chat WhatsApp" membuka WhatsApp ke nomor 085376604024 dengan pesan awal yang sudah terisi dan bisa diatur di CMS. Tombol "Pilih Paket" di kartu paket menggulir ke formulir dengan Paket sudah terpilih.
+- Formulir Pendaftaran: Nama Lengkap dan Nomor WhatsApp wajib; nomor divalidasi format Indonesia (diawali 08 atau 62); Jenis Aplikasi berisi Website Instansi, Toko Online, Absensi, Inventaris, Laporan Kantor, Perpustakaan, Lainnya; Paket berisi tiga paket yang aktif. Saat dikirim: validasi, indikator putar pada tombol, data tersimpan sebagai pendaftar berstatus Baru dengan waktu kirim, lalu muncul dialog sukses berjudul "Pendaftaran Terkirim" dengan tombol "Lanjut ke WhatsApp" (pesan terisi nama dan paket) dan tombol "Tutup". Pengiriman ganda dari nomor yang sama dalam 24 jam ditandai sebagai ganda dan jeda antarpengiriman dibatasi untuk mencegah spam.
+- Hitung mundur dan kuota membaca tanggal akhir dan jumlah kursi dari pengaturan; bila tanggal terlewat atau fitur dimatikan, bagian urgensi tidak tampil. Sisa kuota menampilkan "Sisa N dari M kursi" dan bilah progres.
+- Carousel Karya dan Testimoni bisa digeser dengan jari dan tombol panah, berhenti rapi pada kartu.
+- Akordeon Materi dan FAQ: satu terbuka pada satu waktu, ikon panah berputar.
+- Pengalih tema terang dan gelap (satu tombol, lihat bagian Tema Terang dan Gelap).
+- Tampilan siap dibagikan: judul, deskripsi, dan gambar pratinjau diambil dari pengaturan SEO; halaman cepat dibuka di HP dan gambar di luar layar dimuat belakangan.
+
+Bagian Admin:
+- Dasbor: kartu angka (total pendaftar, pendaftar hari ini, pendaftar bulan ini, pendaftar berstatus Baru), grafik garis pendaftar 30 hari terakhir, grafik batang pendaftar per paket, dan daftar lima pendaftar terbaru.
+- Pendaftar: daftar dengan pencarian (nama, nomor), filter status (Baru, Dihubungi, Selesai) dan paket, urutan terbaru, penomoran halaman; ubah status satu per satu atau massal; catatan internal per pendaftar; tombol "Hubungi" yang membuka WhatsApp ke nomor pendaftar; hapus dengan konfirmasi dan urung singkat; tombol "Unduh CSV" untuk hasil filter; di HP tampil sebagai kartu bertumpuk.
+- Bagian Halaman dan Konten Daftar: ubah judul, isi, gambar, urutan, dan tampil/sembunyi tiap bagian landing page, serta tambah, ubah, hapus, urutkan, dan sembunyikan item pada daftar statistik, masalah, manfaat, langkah, materi, karya, mentor, testimoni, bonus, dan FAQ.
+- Paket dan Harga: nama, harga, harga coret, daftar keunggulan, penanda unggulan, teks tombol, dan aktif/nonaktif tiap paket.
+- Hitung Mundur dan Kuota: tanggal dan jam akhir, jumlah kursi total, dan sisa kursi.
+- Halaman: ubah isi Kebijakan Privasi dan Syarat dan Ketentuan, tambah halaman baru.
+- Footer dan Kontak, Pratinjau, dan Kata Sandi (ubah kata sandi sendiri).
+- Semua gambar (logo, hero, karya, mentor, testimoni, pratinjau berbagi) diganti dari panel sesuai bagian Sumber Gambar dan File.
+- Pencarian cepat di panel, notifikasi hasil aksi, indikator proses pada tombol, dan keadaan kosong yang rapi di setiap daftar.
+
+Bagian Superadmin:
+- CMS penuh sesuai bagian CMS di bawah (identitas, tema, navigasi, tombol, fitur, media, SEO dan pelacak).
+- SEO dan Pelacak: judul dan deskripsi halaman, gambar pratinjau, favicon, serta kolom ID Meta Pixel dan ID Google Analytics yang bila diisi otomatis dipasang di halaman publik.
+- Kelola kata sandi semua peran (admin dan superadmin).
+- Log Aktivitas: daftar ringkas peran mana mengubah apa dan kapan, dengan filter tanggal dan peran.
+- Tab Sinkronisasi sesuai bagian Integrasi.
+
+## 6. Data Contoh
+Seluruh data awal ditulis sebagai data pengaturan yang bisa diubah, bukan ditulis mati di komponen. Gambar contoh awal berupa tautan gambar bebas pakai (misalnya dari Unsplash) yang disimpan sebagai pengaturan sehingga bisa diganti atau dihapus; bila gagal dimuat tampil kerangka abu netral.
+- Hero: judul "Ubah Ide Menjadi Aplikasi, Tanpa Perlu Koding"; subjudul "Belajar membuat aplikasi web yang profesional dan mudah dipahami bersama Guber Smart, dari ide sampai aplikasi jadi."
+- Bar angka: 1.200+ Peserta, 350+ Aplikasi Jadi, 4,9/5 Rating, 20+ Jenis Aplikasi.
+- Masalah (3): "Punya ide, bingung mulai dari mana", "Takut koding itu rumit", "Biaya jasa pembuat aplikasi mahal"; pernyataan solusi: "Guber Smart memandu Anda dari ide sampai aplikasi jadi, tanpa menulis satu baris kode."
+- Manfaat (6): Tanpa Koding, Praktik Langsung, Hasil Profesional, Nyaman di HP, Mentoring Pribadi, Akses Selamanya, masing-masing dengan satu kalimat pendek.
+- Langkah (3): Ceritakan Ide, Buat Prompt, Aplikasi Jadi.
+- Materi (6 modul, tiap modul 3 poin): Mengenal Ide dan Jenis Aplikasi; Menyusun Prompt yang Tepat; Membuat Aplikasi di Google AI Studio; Mengelola Data dengan Google Sheets dan Drive; Menyiapkan Dasbor Admin dan Login; Menerbitkan Aplikasi agar Bisa Dipakai Orang Lain.
+- Karya (8): Website Sekolah, Toko Online, Absensi Guru, Inventaris Barang, Laporan Kantor, Perpustakaan Digital, Kasir, Undangan Digital, masing-masing dengan jenis (Website, Toko, Administrasi) dan gambar.
+- Mentor (1): "Mentor Utama Guber Smart", jabatan "Pendiri dan Mentor", bio dua kalimat tentang pengalaman membimbing pemula membuat aplikasi.
+- Testimoni (6): Rina Aprilia (Guru SD), Budi Santoso (Pemilik Warung Kopi), Dewi Lestari (Staf Administrasi), Ahmad Fauzi (Pengurus Masjid), Sinta Maharani (Mahasiswa), Hendra Wijaya (Wirausaha), masing-masing bintang 5 dan kutipan dua kalimat yang realistis.
+- Paket (3): Paket Pemula Rp199.000 (harga coret Rp399.000), Paket Kreator Rp499.000 (harga coret Rp899.000, ditandai Paling Diminati), Paket Mentoring Rp999.000 (harga coret Rp1.799.000); tiap paket 5-6 keunggulan; tombol "Pilih Paket".
+- Bonus (3): Kumpulan Template Prompt, Grup Komunitas Alumni, Sesi Konsultasi Ide. Garansi: "Garansi Pendampingan sampai Aplikasi Jadi".
+- Urgensi: tanggal akhir 14 hari sejak aplikasi pertama dibuka, kuota 30 kursi dengan sisa 12.
+- FAQ (8): apakah benar-benar tanpa koding, apakah cocok untuk pemula, perangkat yang dibutuhkan, durasi belajar, jenis aplikasi yang bisa dibuat, apakah ada mentoring, cara pembayaran dan pendaftaran, apa yang didapat setelah mendaftar.
+- Pendaftar contoh: 12 pendaftar dengan nama, nomor, paket, jenis aplikasi, status, dan waktu bervariasi agar dasbor dan grafik langsung terlihat hidup.
+- Footer: nama Guber Smart, slogan, WhatsApp 085376604024, hak cipta 2026 Guber Smart; kolom alamat, email, dan media sosial awalnya kosong dan tidak tampil sampai diisi superadmin.
+- Halaman statis: Kebijakan Privasi dan Syarat dan Ketentuan dengan isi singkat yang wajar.
+
+## 7. Peran Pengguna dan Akses
+Peran: Publik (tanpa login, hanya melihat landing page dan mengirim formulir), Admin (mengelola isi, paket, hitung mundur, halaman, footer, dan pendaftar), Superadmin (semua hak Admin ditambah CMS penuh, SEO dan pelacak, kata sandi semua peran, log aktivitas, dan sinkronisasi).
+
+## Login Kata Sandi dan Data
+- Login HANYA dengan kata sandi (tanpa email, tanpa akun Google, tanpa nama pengguna). Kata sandi yang dimasukkan menentukan peran. Kata sandi awal: admin = admin123, superadmin = superadmin123. Semua kata sandi dapat diubah. Tidak ada pendaftaran publik.
+- Tombol login TIDAK diletakkan di badan halaman dan TIDAK berupa tombol terpisah di header. Letakkan sebagai SATU ITEM BIASA bernama "Masuk" di dalam deretan menu navigasi, sebagai item terakhir, dengan gaya yang sama seperti item menu lain, sehingga tidak mengubah susunan atau ukuran menu lain. Di HP: header hanya berisi logo atau nama singkat dan ikon hamburger (tidak ada tombol tambahan di header); "Masuk" adalah item terakhir di daftar menu di dalam panel hamburger, sejajar dan selaras dengan item lain. Di desktop: "Masuk" adalah item terakhir pada deretan menu; bila deretan menu terlalu penuh, beralih ke menu hamburger pada lebar layar yang lebih besar, jangan membiarkan menu bertumpuk, terpotong, atau tersembunyi. Mengetuk "Masuk" membuka dialog sederhana berisi satu kolom "Kata Sandi" (dengan ikon lihat/sembunyikan) dan tombol "Masuk". Setelah berhasil masuk, item "Masuk" berganti menjadi satu item "Dasbor" di posisi yang sama tanpa menggeser menu lain; tombol "Keluar" berada di dalam dasbor, dan di HP tampil sebagai item terakhir daftar menu.
+- Ubah kata sandi: di panel ada menu "Kata Sandi". Admin mengubah kata sandinya sendiri; superadmin mengubah kata sandi semua peran. Formulirnya berisi kata sandi lama (untuk mengubah milik sendiri), kata sandi baru, dan ulangi kata sandi baru, dengan validasi (minimal 8 karakter) dan notifikasi singkat saat berhasil.
+- Kata sandi tidak disimpan sebagai teks biasa; simpan dalam bentuk hash dengan garam. Verifikasi login dan perubahan kata sandi diproses oleh Apps Script terhadap hash di sheet khusus: aplikasi mengirim kata sandi yang diketik, Apps Script memeriksanya, lalu mengembalikan hasil dan peran tanpa pernah mengirim hash ke aplikasi. Selama bagian Sinkronisasi ke Google Sheets (paling bawah) belum dikerjakan, kata sandi diverifikasi dan diubah secara lokal di perangkat.
+- Sesi login berakhir otomatis setelah 30 menit tidak aktif dan saat menekan Keluar.
+- Superadmin: kelola kata sandi semua peran, pengaturan, dan semua isi. Admin: kelola isi landing page dan pendaftar. Publik: hanya melihat halaman publik tanpa login.
+- Halaman admin dilindungi: pengguna yang belum masuk diarahkan ke dialog login; menu yang tidak berhak tidak ditampilkan.
+- Data: seluruh data dan pengaturan aplikasi memakai data contoh realistis yang disimpan dalam satu lapisan data terpisah dan semuanya berupa teks (file tidak pernah disimpan di dalamnya, hanya ID atau tautannya). Penyimpanan ke Google Sheets tidak dikerjakan di bagian ini, melainkan di bagian terakhir file.
+
+## Halaman Tetap Saat Dimuat Ulang
+Saat pengguna memuat ulang (refresh) atau membuka kembali aplikasi, aplikasi tetap berada di halaman yang sedang dibuka, bukan kembali ke beranda. Ini berlaku untuk semua halaman publik, halaman detail, halaman dan tab di panel admin dan superadmin, serta menu atau filter aktif yang penting. Setiap halaman memiliki alamat sendiri yang bisa dibagikan dan dibuka langsung. Tombol kembali dan maju pada peramban atau HP berfungsi benar. Sesi login admin tetap aktif setelah dimuat ulang selama belum berakhir, sehingga admin tidak perlu masuk lagi. Hal yang sama berlaku saat aplikasi dibuka offline (jika didukung). Pada landing page satu halaman, bagian yang sedang dibuka (alamat bagian) juga dipertahankan saat dimuat ulang.
+
+## Akses Offline dan Interaksi Mulus
+Jika didukung, aplikasi bisa dibuka dan dipakai saat offline: halaman, tampilan, dan data terakhir tersimpan di perangkat. Tampilkan lencana status "Offline" yang singkat saat tidak ada koneksi.
+Interaksi sentuh harus mulus: gulir halaman halus tanpa tersendat, gestur geser (galeri, carousel, laci menu) mengikuti jari dengan lancar dan berhenti rapi pada posisi yang tepat, tidak ada gulir ganda atau halaman terkunci, dan tidak ada lonjakan tampilan saat memuat.
+
+## 8. Keadaan Khusus
+Setiap daftar dan bagian punya keadaan kosong (judul singkat tanpa penjelasan), kerangka abu saat memuat, dan tampilan galat yang ramah tanpa teks teknis. Bagian yang datanya kosong disembunyikan dari halaman publik (misalnya Video Promosi tanpa tautan, Testimoni tanpa item). Kontras warna cukup, fokus keyboard terlihat, area sentuh besar, label kolom jelas. Gambar dimuat belakangan, daftar panjang di panel dimuat bertahap, dan tidak ada lonjakan tampilan saat memuat.
+
+## 9. Integrasi
+
+## CMS: Semua Tampilan Dapat Diatur
+Buat panel CMS di dashboard admin. SEMUA elemen tampilan publik dibaca dari pengaturan dan dapat diubah dari CMS, tanpa mengubah kode. Tidak boleh ada teks, warna, label tombol, atau tautan yang tertulis mati di komponen; semuanya memakai nilai pengaturan dengan nilai awal sesuai spesifikasi ini.
+
+Menu CMS (tab) dan isinya:
+1. Identitas: nama aplikasi, slogan, logo, favicon, judul dan deskripsi halaman (SEO dasar).
+2. Tema: warna utama, sekunder, aksen, latar, teks, warna tombol, jenis huruf (pilihan daftar), ukuran sudut membulat, dan warna untuk mode terang serta mode gelap (satu set per mode; tombol pengalih mode untuk pengunjung tetap hanya satu). Perubahan langsung terlihat pada pratinjau.
+3. Navigasi: tambah, ubah, urutkan, tampil/sembunyikan item menu (label, tujuan tautan, ikon).
+4. Tombol: semua tombol aksi di tampilan publik (label, tujuan/tautan, warna, tampil/sembunyi, posisi), nomor WhatsApp tujuan, dan templat pesan WhatsApp (pesan umum dan pesan setelah pendaftaran).
+5. Bagian Halaman: daftar bagian landing page (hero, bar angka, masalah dan solusi, manfaat, cara kerja, materi, karya, video promosi, mentor, testimoni, paket, urgensi, FAQ, formulir, ajakan penutup, footer) dengan pengaturan urutan, tampil/sembunyi, judul, isi teks, dan gambar.
+6. Konten Daftar: tambah, ubah, hapus, urutkan, dan sembunyikan item pada daftar statistik, masalah, manfaat, langkah, materi, karya, mentor, testimoni, bonus, dan FAQ.
+7. Paket dan Harga: nama, harga, harga coret, keunggulan, penanda unggulan, teks tombol, aktif/nonaktif.
+8. Hitung Mundur dan Kuota: tanggal dan jam akhir, kursi total, sisa kursi.
+9. Halaman: tambah, ubah, hapus halaman statis (judul, alamat, isi).
+10. Fitur: sakelar aktif/nonaktif untuk hitung mundur, kuota, bilah ajakan HP, tombol WhatsApp melayang, video promosi, testimoni, galeri karya, bonus, formulir pendaftaran, dan animasi gulir.
+11. Media: tautan video promosi (YouTube) dan gambar tiap bagian.
+12. SEO dan Pelacak: judul dan deskripsi halaman, gambar pratinjau berbagi, ID Meta Pixel, ID Google Analytics.
+13. Footer dan Kontak: alamat, telepon, email, jam layanan, tautan media sosial, teks hak cipta.
+14. Pratinjau: tombol Pratinjau untuk melihat hasil perubahan. Tidak ada tombol reset atau pulihkan pengaturan di panel mana pun.
+
+Penyimpanan: seluruh pengaturan CMS disimpan sebagai teks pada satu lapisan data pengaturan yang terpisah, awalnya tersimpan di lokal perangkat admin. Setiap tab punya satu tombol Simpan yang menyimpan ke spreadsheet lewat Apps Script (sesuai bagian Sinkronisasi ke Google Sheets di paling bawah). Gambar (logo, favicon, gambar bagian) diunggah ke Google Drive lewat Apps Script atau memakai tautan langsung, dan hanya ID/tautannya yang disimpan sebagai teks.
+Hak akses CMS: superadmin mengatur semua tab; admin hanya tab Bagian Halaman, Konten Daftar, Paket dan Harga, Hitung Mundur dan Kuota, Halaman, Footer dan Kontak, dan Pratinjau.
+Panel CMS juga tunduk pada aturan tanpa teks petunjuk: hanya label tab, label kolom, tombol, dan status.
+
+## Sumber Gambar dan File
+Semua gambar dan file yang tampil di aplikasi (logo, banner, galeri, foto produk, sampul, dokumen) dapat diganti dari panel admin dengan dua cara: (1) unggah file ke Google Drive lewat Apps Script, atau (2) tempel tautan langsung dari layanan hosting gambar seperti Unsplash atau ImgBB. Setiap kolom gambar di panel punya dua tab pendek berlabel "Unggah" dan "Tautan", lalu pratinjau dan ikon hapus.
+Simpan sebagai teks: sumber ("drive" atau "tautan") dan nilainya (fileId atau URL). Saat ditampilkan: bila sumber "drive", ambil base64 lewat Apps Script; bila "tautan", pakai URL langsung sebagai src. Bila gambar gagal dimuat, tampilkan kerangka abu netral tanpa teks galat. Gambar contoh awal disimpan sebagai data pengaturan (bukan ditulis mati di komponen) sehingga bisa diganti atau dihapus dari panel. Setiap kolom gambar punya tombol "Hapus Gambar".
+
+## Unggah File
+Admin dapat mengunggah gambar ke Google Drive lewat Google Apps Script. Periksa jenis dan ukuran file (jenis: JPG, PNG, WEBP; batas: 5 MB), tampilkan pesan hanya bila ditolak. Gambar dikompres otomatis sebelum diunggah. Setelah berhasil, simpan HANYA teks berupa ID file, nama file, dan tautan. Admin bisa menghapus file yang sudah diunggah. Antarmuka unggah hanya berupa tombol "Pilih Gambar", lalu pratinjau dan ikon hapus, dengan indikator putar saat mengunggah. Tidak ada teks di UI yang menyebut Drive, Apps Script, spreadsheet, format, atau batas ukuran.
+
+## Menampilkan Gambar
+Gambar yang tersimpan di Drive ditampilkan otomatis dengan mengubah tautan/ID-nya menjadi base64 lewat Apps Script. Simpan hasilnya selama sesi agar tidak diunduh ulang. Saat memuat tampilkan kerangka abu netral; bila gagal, tampilkan latar abu halus tanpa teks galat. Gambar di luar layar dimuat belakangan.
+
+## Panel Admin: Tab Sinkronisasi (hanya superadmin)
+Buatkan tab "Sinkronisasi" di panel admin yang berisi:
+1. Kode Google Apps Script lengkap yang Anda buat sesuai fungsi yang dibutuhkan aplikasi ini: uji koneksi, unggah file ke folder Google Drive, hapus file, dan ambil gambar agar bisa ditampilkan; serta verifikasi login, ubah kata sandi, dan baca, tambah, ubah, dan hapus data di sheet sesuai bagian Sinkronisasi ke Google Sheets. Tampilkan dalam kotak kode dengan tombol "Salin Kode". Bagian atas kode berisi pengaturan (token, ID folder Drive, ID spreadsheet) yang diisi pemilik. Kode harus siap tempel tanpa perubahan lain.
+2. Kolom isian URL Web App, Token, ID Folder Drive, ID Spreadsheet, dan tombol Simpan.
+3. Tombol "Uji Koneksi" dengan lencana status (Terhubung atau Gagal).
+4. Pengaturan sheet yang dipakai.
+Simpan pengaturan ini pada lapisan data pengaturan aplikasi: URL bersifat publik agar gambar tampil, sedangkan token dan ID hanya untuk staf. Tab ini tanpa teks petunjuk: hanya kotak kode, label, kolom, tombol, dan status.
+
+## 10. Batasan
+Bagian ini hanya untuk AI Studio dan tidak boleh muncul di tampilan aplikasi. Pembayaran sungguhan dan pengiriman email tidak dibuat: pendaftaran berakhir di data pendaftar dan percakapan WhatsApp. Fitur PWA (pemasangan ke layar utama, ikon, menu "Pasang Aplikasi") tidak dibuat. Jangan mengintegrasikan atau memasang layanan Firebase atau Firestore; seluruh penyimpanan memakai data lokal dan, bila diminta, Google Sheets lewat Apps Script.
+Pastikan proyek ini, saat di-push ke GitHub lalu di-deploy lewat Vercel, tidak menghasilkan error pada "npm run build" (exited with 1). Periksa dan perbaiki sendiri sebelum menyatakan selesai: semua impor mengarah ke berkas yang benar-benar ada dengan nama dan huruf besar/kecil yang cocok persis, tidak ada galat sintaks atau tipe, dan semua paket yang dipakai tercantum di dependensi proyek.
+
+## 11. Ringkasan Struktur Aplikasi
+- Halaman: Landing Page publik (satu halaman panjang dengan 16 bagian), halaman statis (Kebijakan Privasi, Syarat dan Ketentuan), 404, panel Admin, panel Superadmin.
+- Modul bagian publik (satu modul TSX per bagian): Hero, BarAngka, MasalahSolusi, Manfaat, CaraKerja, Materi, Karya, VideoPromosi, Mentor, Testimoni, Paket, Urgensi, Faq, FormulirPendaftaran, AjakanPenutup, Footer.
+- Komponen bersama: Header, MenuHamburger, PengalihTema, BilahAjakanHP, WhatsAppMelayang, DialogLogin, KolomGambar (Unggah dan Tautan), Akordeon, Carousel, DialogPratinjau, Notifikasi, Kerangka.
+- Modul panel: Dasbor, Pendaftar, BagianHalaman, KontenDaftar, PaketHarga, HitungMundurKuota, HalamanStatis, FooterKontak, Pratinjau, KataSandi; khusus superadmin: Identitas, Tema, Navigasi, Tombol, Fitur, Media, SeoPelacak, LogAktivitas, Sinkronisasi.
+- Peran: Publik, Admin, Superadmin (login kata sandi saja).
+- Koleksi data (semuanya teks): pengaturan CMS, konten daftar, paket, pendaftar, hash kata sandi, log aktivitas.
+- Integrasi: Google Apps Script (Drive untuk gambar, Google Sheets untuk data teks, verifikasi login), WhatsApp (tautan), YouTube (sematan), Meta Pixel dan Google Analytics (bila diisi).
+- Gaya: indigo #4F46E5, oranye #F97316, biru gelap #0F172A, Plus Jakarta Sans dan Inter, mode terang dan gelap, HP sebagai prioritas.
+- Batasan: tanpa PWA, tanpa pembayaran dan email sungguhan, tanpa teks petunjuk di tampilan, penyimpanan hanya data lokal dan Google Sheets lewat Apps Script.
+
+## 12. Struktur Kode Modular
+Susun kode dalam modul-modul terpisah berupa komponen TSX: satu modul per halaman, per fitur, dan per bagian panel (admin, CMS, superadmin), ditambah komponen bersama yang dipakai ulang (menu, tombol, formulir, kartu, dialog, pengunggah gambar, grafik). Satu berkas satu tanggung jawab, berukuran wajar, bernama jelas, dan dikelompokkan dalam folder yang logis (misalnya halaman, komponen bersama, admin, data, dan konstanta), sehingga satu bagian bisa diubah tanpa menyentuh bagian lain. Pisahkan data dan pengaturan dari tampilan, dan letakkan aturan desain permanen di berkas tersendiri. Hindari satu berkas besar yang berisi banyak hal. Setiap revisi hanya mengubah modul yang diminta, tanpa menyentuh modul lain.
+
+## Sinkronisasi ke Google Sheets (LANGKAH TERAKHIR)
+Kerjakan bagian ini PALING AKHIR, setelah seluruh aplikasi di atas selesai dibangun dan berjalan baik dengan data contoh lokal. Jangan mengubah tampilan dan fitur yang sudah jadi. Patuhi berkas aturan desain permanen (designSystem), dan jangan menambahkan teks petunjuk, penjelasan fungsi, atau keterangan teknis apa pun di tampilan, termasuk soal spreadsheet.
+Semua pertukaran data dengan Google Sheets memakai Google Apps Script (kodenya ada di tab Sinkronisasi), tanpa kecuali:
+- Verifikasi login: aplikasi mengirim kata sandi yang diketik ke Apps Script; Apps Script memeriksanya terhadap hash kata sandi di sheet khusus lalu mengembalikan hasil dan peran. Hash kata sandi tidak pernah dikirim ke aplikasi atau pengunjung. Ubah kata sandi juga diproses oleh Apps Script.
+- Input data: tambah, ubah, dan hapus data aplikasi (pendaftar, paket, statistik, manfaat, materi, karya, mentor, testimoni, bonus, FAQ, halaman statis, log aktivitas) dan pengaturan CMS (termasuk video, hitung mundur, dan kuota) ditulis ke sheet lewat Apps Script.
+- Tarik data: saat halaman dibuka atau disegarkan, aplikasi menarik data terbaru dari sheet lewat Apps Script dan menampilkannya; perubahan yang disimpan admin terlihat di perangkat lain dengan cara terbaik menurut Anda.
+- Hanya teks atau tautan berupa teks yang disimpan di sheet; file tetap lewat Google Drive dengan hanya ID dan tautannya yang disimpan. Data sensitif (hash kata sandi, token) hanya diproses di dalam Apps Script dan tidak dikembalikan kepada aplikasi atau pengunjung.
+- Aksi yang mengubah data atau mengambil data non-publik hanya diterima Apps Script bila disertai sesi login yang sah; data publik boleh ditarik tanpa login. Satu-satunya pengecualian: pengunjung boleh mengirim formulir pendaftaran tanpa login, yang hanya menambah satu baris pada sheet Pendaftar setelah divalidasi dan dibatasi frekuensinya; pengunjung tidak pernah bisa membaca, mengubah, atau menghapus data pendaftar.
+
+### Tombol Simpan Pengaturan (hemat kuota)
+Pada setiap tab atau menu pengaturan di CMS dan panel admin, sediakan TEPAT SATU tombol "Simpan" yang menyimpan semua perubahan pada tab itu ke spreadsheet lewat Apps Script, baik mengedit, menambah, maupun menghapus.
+- JANGAN PERNAH menyimpan pengaturan ke spreadsheet secara otomatis (tidak saat mengetik, berpindah tab, atau menutup halaman). Penyimpanan hanya terjadi saat tombol Simpan ditekan.
+- Sebelum Simpan ditekan, semua perubahan (termasuk menambah dan menghapus) hanya tersimpan di penyimpanan lokal perangkat sebagai draf. Tombol Simpan hanya menulis bagian yang berubah, bukan seluruh pengaturan, dan nonaktif bila tidak ada perubahan.
+- Yang tersimpan hanya teks atau tautan berupa teks; tidak pernah file, gambar, atau base64.
+- Setelah Simpan berhasil, muncul notifikasi singkat "Berhasil disimpan".
+- Tidak boleh ada tombol reset atau pulihkan pengaturan di panel admin.
+
+PENTING: tampilan aplikasi harus bersih dan profesional seperti produk jadi, sempurna dan responsif di layar HP (menu, tombol, dan semua elemen rapi, proporsional, tidak ada yang tersembunyi), tanpa satu pun teks petunjuk, penjelasan fungsi, atau keterangan teknis (termasuk soal unggah file, Drive, Apps Script, atau spreadsheet). Hanya label, konten, pesan galat, dan notifikasi hasil aksi yang boleh tampil. Tombol, menu, dan kolom harus mudah dipakai dan dipahami lewat label yang jelas saja.

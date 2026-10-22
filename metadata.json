@@ -1,0 +1,6 @@
+{
+  "name": "Guber Smart",
+  "description": "Ubah Ide Menjadi Aplikasi, Tanpa Perlu Koding. Belajar membuat aplikasi web profesional dan mudah dipahami.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
