@@ -5,7 +5,7 @@
 
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { ImageRef } from '../../types';
 import { ResolvedImage } from '../common/ResolvedImage';
 
@@ -39,20 +39,6 @@ export function Hero({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column: Copy & Actions */}
           <div className="lg:col-span-7 text-left space-y-6">
-            {/* Badges */}
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold text-indigo-700 dark:text-indigo-400">
-              <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-900/40">
-                <Sparkles className="w-3.5 h-3.5" />
-                Cocok untuk Pemula
-              </span>
-              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                Praktik Langsung
-              </span>
-              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                Mentoring
-              </span>
-            </div>
-
             {/* Headline */}
             {title && (
               <h1 className="font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl text-slate-900 dark:text-white tracking-tight leading-[1.15] text-balance">

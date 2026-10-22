@@ -6,7 +6,7 @@
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
 import { useState } from 'react';
-import { ChevronDown, CheckCircle } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { ModuleItem } from '../../types';
 
 interface MateriProps {
@@ -59,10 +59,10 @@ export function Materi({ modules }: MateriProps) {
 
                 {isOpen && (
                   <div className="px-5 sm:px-6 pb-5 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-                    <ul className="space-y-2.5 mt-2">
+                    <ul className="space-y-2 mt-2">
                       {item.points.map((pt, pIdx) => (
-                        <li key={pIdx} className="flex items-start gap-2.5 text-sm sm:text-base text-slate-600 dark:text-slate-300">
-                          <CheckCircle className="w-4 h-4 text-emerald-500 mt-1 shrink-0" />
+                        <li key={pIdx} className="flex items-start gap-2 text-sm sm:text-base text-slate-600 dark:text-slate-300">
+                          <span className="text-slate-400 select-none">·</span>
                           <span>{pt}</span>
                         </li>
                       ))}

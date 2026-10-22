@@ -6,7 +6,7 @@
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
 import React, { useState } from 'react';
-import { X, Eye, EyeOff, Loader2, Lock } from 'lucide-react';
+import { X, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { StorageService } from '../../services/storageService';
 import { UserRole } from '../../types';
 
@@ -58,12 +58,7 @@ export function LoginModal({ isOpen, onClose, onLoginSuccess, webAppUrl }: Login
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-              <Lock className="w-5 h-5" />
-            </div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Masuk</h2>
-          </div>
+          <h2 className="font-display font-bold text-lg text-slate-900 dark:text-white">Masuk</h2>
           <button
             type="button"
             onClick={onClose}

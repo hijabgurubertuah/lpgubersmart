@@ -5,7 +5,7 @@
 
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
-import { Check, Gift, Shield } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { PackageItem, BonusItem } from '../../types';
 
 interface PaketProps {
@@ -114,14 +114,9 @@ export function Paket({
         {showBonus && (
           <div className="space-y-6">
             <div className="p-6 sm:p-8 rounded-3xl bg-indigo-50/60 dark:bg-[#131C31] border border-indigo-100 dark:border-indigo-900/40">
-              <div className="flex items-center gap-2.5 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0">
-                  <Gift className="w-5 h-5" />
-                </div>
-                <h3 className="font-display font-bold text-xl text-slate-900 dark:text-white">
-                  Bonus Eksklusif
-                </h3>
-              </div>
+              <h3 className="font-display font-bold text-xl text-slate-900 dark:text-white mb-6">
+                Bonus Eksklusif
+              </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {visibleBonuses.map((bonus) => (
@@ -138,15 +133,10 @@ export function Paket({
             </div>
 
             {guaranteeText && (
-              <div className="p-5 sm:p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-900/40 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                  <Shield className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-display font-bold text-lg text-emerald-950 dark:text-emerald-200">
-                    {guaranteeText}
-                  </h4>
-                </div>
+              <div className="p-5 sm:p-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200/70 dark:border-emerald-900/40">
+                <h4 className="font-display font-bold text-lg text-emerald-950 dark:text-emerald-200 text-center sm:text-left">
+                  {guaranteeText}
+                </h4>
               </div>
             )}
           </div>

@@ -6,7 +6,6 @@
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
 import { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
 import { UrgencySettings } from '../../types';
 
 interface UrgensiProps {
@@ -63,9 +62,8 @@ export function Urgensi({ urgency, showCountdown, showQuota }: UrgensiProps) {
           {/* Countdown Block */}
           {showCountdown && (
             <div className="flex-1 text-center md:text-left space-y-3">
-              <div className="flex items-center justify-center md:justify-start gap-2 text-indigo-300 text-sm font-semibold">
-                <Clock className="w-4 h-4 text-orange-400" />
-                <span>Pendaftaran Gelombang Ini Berakhir Dalam</span>
+              <div className="text-indigo-300 text-sm font-semibold">
+                Pendaftaran Gelombang Ini Berakhir Dalam
               </div>
               <div className="flex items-center justify-center md:justify-start gap-3">
                 <TimeUnit val={timeLeft.days} unit="Hari" />

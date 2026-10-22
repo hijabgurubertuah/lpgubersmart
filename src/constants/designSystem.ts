@@ -13,6 +13,8 @@
  *    - Dilarang menyebut istilah teknis di antarmuka (Drive, Apps Script, spreadsheet, base64, dsb).
  *    - Dilarang teks kecil abu-abu penjelas di bawah tombol, kolom, atau judul.
  *    - Dilarang tooltip, balon petunjuk, tour, onboarding, banner cara pakai, badge baru/demo, kata simulasi/mock.
+ *    - Dilarang membuat tag berbentuk tombol palsu (pill badge, chips, tag kapsul lonjong) yang tidak bisa ditekan/diklik.
+ *    - Dilarang meletakkan ikon dekoratif tanpa fungsi di atas kartu, judul, atau teks (bebas ikon hiasan; ikon hanya untuk fungsi interaktif seperti tombol tutup, panah navigasi, dan kontak).
  * 3. HANYA TEKS RESMI YANG DIIZINKAN:
  *    - Konten asli aplikasi (isi artikel, data produk, nama peserta).
  *    - Judul halaman & judul bagian (satu frasa singkat).

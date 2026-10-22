@@ -6,7 +6,7 @@
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
 import { useRef } from 'react';
-import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { TestimonialItem } from '../../types';
 import { ResolvedImage } from '../common/ResolvedImage';
 
@@ -70,13 +70,10 @@ export function Testimoni({ testimonials }: TestimoniProps) {
               className="w-[300px] sm:w-[360px] shrink-0 snap-start p-6 sm:p-7 rounded-2xl bg-white dark:bg-[#131C31] border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between shadow-xs"
             >
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-1 text-amber-400">
-                    {Array.from({ length: item.rating || 5 }).map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400" />
-                    ))}
-                  </div>
-                  <Quote className="w-6 h-6 text-slate-200 dark:text-slate-700" />
+                <div className="flex items-center gap-1 text-amber-400 mb-4">
+                  {Array.from({ length: item.rating || 5 }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400" />
+                  ))}
                 </div>
                 <p className="text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed italic mb-6">
                   "{item.quote}"

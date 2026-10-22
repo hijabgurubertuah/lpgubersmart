@@ -5,7 +5,7 @@
 
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
-import { AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { ProblemItem } from '../../types';
 
 interface MasalahSolusiProps {
@@ -40,9 +40,6 @@ export function MasalahSolusi({
               key={prob.id}
               className="p-6 sm:p-8 rounded-2xl bg-slate-50 dark:bg-[#131C31] border border-slate-200/80 dark:border-slate-800 transition-all hover:border-slate-300 dark:hover:border-slate-700"
             >
-              <div className="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center mb-5 shrink-0">
-                <AlertCircle className="w-6 h-6" />
-              </div>
               <h3 className="font-display font-bold text-lg text-slate-900 dark:text-white leading-snug">
                 {prob.title}
               </h3>
@@ -52,15 +49,10 @@ export function MasalahSolusi({
 
         {/* Solution Banner */}
         <div className="p-8 sm:p-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shrink-0 mt-1">
-              <CheckCircle2 className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white leading-snug">
-                {solutionText}
-              </p>
-            </div>
+          <div>
+            <p className="font-display font-bold text-xl sm:text-2xl text-slate-900 dark:text-white leading-snug">
+              {solutionText}
+            </p>
           </div>
           <button
             type="button"
