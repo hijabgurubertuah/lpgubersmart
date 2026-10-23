@@ -66,7 +66,6 @@ const STORAGE_KEYS = {
   APPLICANTS: 'guber_smart_applicants_v1',
   LOGS: 'guber_smart_logs_v1',
   SESSION: 'guber_smart_auth_session_v1',
-  THEME: 'guber_smart_theme_mode_v1',
   PASSWORDS: 'guber_smart_passwords_v1',
   IMAGE_CACHE: 'guber_smart_img_cache_v1',
 };
@@ -105,25 +104,6 @@ export class StorageService {
       localStorage.setItem(key, JSON.stringify(value));
     } catch {
       // ignore storage quota errors
-    }
-  }
-
-  // --- Theme ---
-  static getTheme(): 'light' | 'dark' {
-    const saved = localStorage.getItem(STORAGE_KEYS.THEME);
-    if (saved === 'dark' || saved === 'light') return saved;
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-    return 'light';
-  }
-
-  static setTheme(theme: 'light' | 'dark'): void {
-    localStorage.setItem(STORAGE_KEYS.THEME, theme);
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
     }
   }
 

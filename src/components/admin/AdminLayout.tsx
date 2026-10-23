@@ -32,7 +32,6 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { UserRole } from '../../types';
-import { ThemeToggle } from '../common/ThemeToggle';
 
 export type AdminTab =
   | 'dasbor'
@@ -60,8 +59,6 @@ interface AdminLayoutProps {
   onTabChange: (tab: AdminTab) => void;
   onLogout: () => void;
   onPreviewSite: () => void;
-  theme: 'light' | 'dark';
-  onToggleTheme: () => void;
   children: React.ReactNode;
 }
 
@@ -71,8 +68,6 @@ export function AdminLayout({
   onTabChange,
   onLogout,
   onPreviewSite,
-  theme,
-  onToggleTheme,
   children,
 }: AdminLayoutProps) {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -212,7 +207,6 @@ export function AdminLayout({
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Ke Landing Page</span>
             </button>
-            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
           </div>
         </header>
 

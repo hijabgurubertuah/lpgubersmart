@@ -8,7 +8,6 @@
 import { useState } from 'react';
 import { Menu, LayoutDashboard, LogIn } from 'lucide-react';
 import { NavItem, UserRole, ImageRef } from '../../types';
-import { ThemeToggle } from './ThemeToggle';
 import { MenuHamburger } from './MenuHamburger';
 import { ResolvedImage } from './ResolvedImage';
 
@@ -20,8 +19,6 @@ interface HeaderProps {
   onNavigate: (href: string) => void;
   userRole: UserRole;
   onOpenLogin: () => void;
-  theme: 'light' | 'dark';
-  onToggleTheme: () => void;
   ctaText: string;
 }
 
@@ -33,8 +30,6 @@ export function Header({
   onNavigate,
   userRole,
   onOpenLogin,
-  theme,
-  onToggleTheme,
   ctaText,
 }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,7 +42,7 @@ export function Header({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full h-16 bg-white/95 dark:bg-[#0B1120]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+      <header className="sticky top-0 z-40 w-full h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-colors">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Wordmark & Logo */}
           <a
@@ -67,7 +62,7 @@ export function Header({
                 GS
               </div>
             )}
-            <span className="font-display font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white whitespace-nowrap">
+            <span className="font-display font-bold text-lg sm:text-xl tracking-tight text-slate-900 whitespace-nowrap">
               {appName || 'Guber Smart'}
             </span>
           </a>
@@ -86,8 +81,8 @@ export function Header({
                   }}
                   className={`transition-colors whitespace-nowrap py-1 ${
                     isActive
-                      ? 'text-indigo-600 dark:text-indigo-400 font-semibold'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                      ? 'text-indigo-600 font-semibold'
+                      : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   {item.label}
@@ -95,17 +90,12 @@ export function Header({
               );
             })}
 
-            {/* Theme Toggle in desktop menu */}
-            <div className="pl-1 border-l border-slate-200 dark:border-slate-800">
-              <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-            </div>
-
             {/* Login / Dashboard as the LAST ordinary item */}
             {userRole === 'public' ? (
               <button
                 type="button"
                 onClick={onOpenLogin}
-                className="flex items-center gap-1.5 py-1 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors whitespace-nowrap"
+                className="flex items-center gap-1.5 py-1 text-slate-600 hover:text-slate-900 transition-colors whitespace-nowrap"
               >
                 <LogIn className="w-4 h-4" />
                 <span>Masuk</span>
@@ -117,7 +107,7 @@ export function Header({
                   e.preventDefault();
                   onNavigate('#/admin');
                 }}
-                className="flex items-center gap-1.5 py-1 text-indigo-600 dark:text-indigo-400 font-semibold hover:text-indigo-700 transition-colors whitespace-nowrap"
+                className="flex items-center gap-1.5 py-1 text-indigo-600 font-semibold hover:text-indigo-700 transition-colors whitespace-nowrap"
               >
                 <LayoutDashboard className="w-4 h-4" />
                 <span>Dasbor</span>
@@ -132,7 +122,7 @@ export function Header({
         <button
           type="button"
           onClick={() => setIsMobileMenuOpen(true)}
-          className="xl:hidden fixed left-0 top-1/2 -translate-y-1/2 z-40 w-[25px] h-[120px] bg-orange-500/80 hover:bg-orange-500/95 dark:bg-orange-500/75 dark:hover:bg-orange-500/90 text-white backdrop-blur-xs rounded-r-xl flex items-center justify-center shadow-lg active:scale-95 transition-all border border-l-0 border-white/20"
+          className="xl:hidden fixed left-0 top-1/2 -translate-y-1/2 z-40 w-[25px] h-[120px] bg-orange-500/80 hover:bg-orange-500/95 text-white backdrop-blur-xs rounded-r-xl flex items-center justify-center shadow-lg active:scale-95 transition-all border border-l-0 border-white/20"
           aria-label="Buka Menu"
         >
           <Menu className="w-4 h-4" />
@@ -148,11 +138,10 @@ export function Header({
         onNavigate={onNavigate}
         userRole={userRole}
         onOpenLogin={onOpenLogin}
-        theme={theme}
-        onToggleTheme={onToggleTheme}
         onCtaClick={handleCtaClick}
         ctaText={ctaText}
       />
     </>
   );
 }
+

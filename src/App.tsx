@@ -63,19 +63,6 @@ import { AdminActivityLogs } from './components/admin/AdminActivityLogs';
 import { AdminSync } from './components/admin/AdminSync';
 
 export default function App() {
-  // Theme State
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => StorageService.getTheme());
-
-  const handleToggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    StorageService.setTheme(next);
-  };
-
-  useEffect(() => {
-    StorageService.setTheme(theme);
-  }, [theme]);
-
   // Auth State
   const [userRole, setUserRole] = useState<UserRole>(() => {
     const session = StorageService.getSession();
@@ -337,7 +324,7 @@ export default function App() {
   if (isAdminRoute) {
     if (userRole === 'public') {
       return (
-        <div className="min-h-screen bg-slate-50 dark:bg-[#0B1120] flex items-center justify-center p-4">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
           <LoginModal
             isOpen={true}
             onClose={() => navigateTo('#beranda')}
@@ -361,8 +348,6 @@ export default function App() {
           }}
           onLogout={handleLogout}
           onPreviewSite={() => navigateTo('#beranda')}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
         >
           {adminTab === 'dasbor' && (
             <AdminDashboard
@@ -520,7 +505,7 @@ export default function App() {
     const page = staticPages.find((p) => p.slug === slug);
 
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0B1120]">
+      <div className="min-h-screen flex flex-col bg-slate-50">
         <OfflineBadge />
         <Header
           appName={cmsSettings.identity.appName}
@@ -530,8 +515,6 @@ export default function App() {
           onNavigate={navigateTo}
           userRole={userRole}
           onOpenLogin={() => setIsLoginModalOpen(true)}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
           ctaText={cmsSettings.buttons.ctaHeroText}
         />
         <main className="flex-1">
@@ -562,7 +545,7 @@ export default function App() {
   // 404 Check for unrecognized non-section hashes starting with #/
   if (currentHash.startsWith('#/') && !isAdminRoute) {
     return (
-      <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0B1120]">
+      <div className="min-h-screen flex flex-col bg-slate-50">
         <OfflineBadge />
         <Header
           appName={cmsSettings.identity.appName}
@@ -572,8 +555,6 @@ export default function App() {
           onNavigate={navigateTo}
           userRole={userRole}
           onOpenLogin={() => setIsLoginModalOpen(true)}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
           ctaText={cmsSettings.buttons.ctaHeroText}
         />
         <main className="flex-1">
@@ -599,7 +580,7 @@ export default function App() {
   const sections = cmsSettings.sections;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#0B1120] text-slate-900 dark:text-[#E5E7EB] font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-indigo-500 selection:text-white">
       <OfflineBadge />
       <NotificationToast toasts={toasts} onDismiss={dismissToast} />
 
@@ -612,8 +593,6 @@ export default function App() {
         onNavigate={navigateTo}
         userRole={userRole}
         onOpenLogin={() => setIsLoginModalOpen(true)}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
         ctaText={cmsSettings.buttons.ctaHeroText}
       />
 
