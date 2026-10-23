@@ -5,7 +5,7 @@
 
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard,
   Users,
@@ -76,6 +76,17 @@ export function AdminLayout({
   children,
 }: AdminLayoutProps) {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMobileDrawerOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileDrawerOpen]);
 
   // Define tab navigation based on role
   interface NavEntry {
@@ -187,14 +198,6 @@ export function AdminLayout({
         {/* Top Header */}
         <header className="h-16 px-4 sm:px-6 bg-white dark:bg-[#131C31] border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setIsMobileDrawerOpen(true)}
-              className="lg:hidden w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100"
-              aria-label="Menu Admin"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
             <h2 className="font-display font-bold text-lg text-slate-900 dark:text-white truncate">
               {activeTitle}
             </h2>
@@ -218,6 +221,18 @@ export function AdminLayout({
           {children}
         </main>
       </div>
+
+      {/* Edge Trigger Button for Admin Mobile Sidebar (Tinggi 120 x 25, di tepi kiri, oranye agak transparan, hanya ikon hamburger) */}
+      {!isMobileDrawerOpen && (
+        <button
+          type="button"
+          onClick={() => setIsMobileDrawerOpen(true)}
+          className="lg:hidden fixed left-0 top-1/2 -translate-y-1/2 z-40 w-[25px] h-[120px] bg-orange-500/80 hover:bg-orange-500/95 dark:bg-orange-500/75 dark:hover:bg-orange-500/90 text-white backdrop-blur-xs rounded-r-xl flex items-center justify-center shadow-lg active:scale-95 transition-all border border-l-0 border-white/20"
+          aria-label="Buka Menu Admin"
+        >
+          <Menu className="w-4 h-4" />
+        </button>
+      )}
 
       {/* Mobile Sidebar Drawer */}
       {isMobileDrawerOpen && (

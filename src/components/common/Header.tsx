@@ -6,7 +6,7 @@
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
 import { useState } from 'react';
-import { Menu, X, LayoutDashboard, LogIn } from 'lucide-react';
+import { Menu, LayoutDashboard, LogIn } from 'lucide-react';
 import { NavItem, UserRole, ImageRef } from '../../types';
 import { ThemeToggle } from './ThemeToggle';
 import { MenuHamburger } from './MenuHamburger';
@@ -124,18 +124,20 @@ export function Header({
               </a>
             )}
           </nav>
-
-          {/* Mobile Hamburger Button (area touch min 44px) */}
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="xl:hidden w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0"
-            aria-label={isMobileMenuOpen ? 'Tutup menu' : 'Buka menu'}
-          >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
       </header>
+
+      {/* Edge Trigger Button for Mobile Sidebar (Ukuran tinggi 120 x 25, di tepi kiri, oranye agak transparan, hanya ikon hamburger) */}
+      {!isMobileMenuOpen && (
+        <button
+          type="button"
+          onClick={() => setIsMobileMenuOpen(true)}
+          className="xl:hidden fixed left-0 top-1/2 -translate-y-1/2 z-40 w-[25px] h-[120px] bg-orange-500/80 hover:bg-orange-500/95 dark:bg-orange-500/75 dark:hover:bg-orange-500/90 text-white backdrop-blur-xs rounded-r-xl flex items-center justify-center shadow-lg active:scale-95 transition-all border border-l-0 border-white/20"
+          aria-label="Buka Menu"
+        >
+          <Menu className="w-4 h-4" />
+        </button>
+      )}
 
       {/* Mobile Hamburger Drawer */}
       <MenuHamburger

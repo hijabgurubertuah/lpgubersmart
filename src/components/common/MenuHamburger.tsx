@@ -53,7 +53,7 @@ export function MenuHamburger({
   const visibleItems = navItems.filter((i) => i.isVisible).sort((a, b) => a.order - b.order);
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-50 flex justify-start">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
@@ -61,7 +61,7 @@ export function MenuHamburger({
       />
 
       {/* Drawer */}
-      <div className="relative w-[85%] max-w-sm h-full bg-white dark:bg-[#0B1120] shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-200">
+      <div className="relative w-[85%] max-w-sm h-full bg-white dark:bg-[#0B1120] shadow-2xl flex flex-col z-10 animate-in slide-in-from-left duration-200">
         {/* Header inside drawer */}
         <div className="h-16 px-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between shrink-0">
           <span className="font-display font-bold text-lg text-slate-900 dark:text-white">

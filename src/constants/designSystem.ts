@@ -31,8 +31,10 @@
  *    - Banner/hero boleh dikosongkan teksnya; bila kosong tampilkan gambar murni tanpa gradien gelap.
  *    - Tidak ada gambar bawaan yang tertulis mati; semua gambar dari pengaturan, bila kosong tampilkan kerangka abu.
  * 5. TAMPILAN HP SEBAGAI PRIORITAS UTAMA (360-430px):
- *    - Tombol hamburger di kanan atas header, berubah jadi ikon tutup saat terbuka.
- *    - Menu samping laci / panel layar penuh dengan overlay gelap di belakangnya.
+ *    - Tidak ada tombol menu/hamburger di bilah atas (header bersih dari tombol menu).
+ *    - Menu diakses melalui tombol samping tepi kiri (edge trigger di posisi fixed left-0) ukuran tinggi 120px x lebar 25px, warna oranye agak transparan (bg-orange-500/80 backdrop-blur-xs), dengan sudut melengkung ke dalam (rounded-r-xl) dan hanya berisi ikon hamburger putih.
+ *    - Menu samping laci (sidebar drawer) muncul dari sebelah kiri dengan overlay gelap di belakangnya; ketuk di luar otomatis menutup.
+ *    - Layar latar belakang terkunci (tidak ikut ter-scroll saat isi sidebar digulir).
  *    - Item navigasi tersusun vertikal satu kolom, tinggi >= 48px, font >= 16px.
  *    - Tombol login "Masuk" HANYA item biasa terakhir di menu navigasi, bukan tombol di header atau body.
  *    - Saat login berhasil, item "Masuk" berubah menjadi "Dasbor" di posisi yang sama.
