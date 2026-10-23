@@ -111,8 +111,8 @@ export function AdminLayout({
     { id: 'media', label: 'Media', icon: Image, superadminOnly: true },
     { id: 'seoTrackers', label: 'SEO dan Pelacak', icon: Globe, superadminOnly: true },
     { id: 'logs', label: 'Log Aktivitas', icon: History, superadminOnly: true },
-    { id: 'sync', label: 'Sinkronisasi', icon: RefreshCw, superadminOnly: true },
-    { id: 'notifications', label: 'Notifikasi', icon: Bell, superadminOnly: true },
+    { id: 'sync', label: 'Sinkronisasi', icon: RefreshCw },
+    { id: 'notifications', label: 'Notifikasi', icon: Bell },
     // General
     { id: 'password', label: 'Kata Sandi', icon: KeyRound },
   ];

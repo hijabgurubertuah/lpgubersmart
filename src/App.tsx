@@ -438,6 +438,22 @@ export default function App() {
             />
           )}
 
+          {adminTab === 'sync' && (
+            <AdminSync
+              syncSettings={cmsSettings.syncSettings}
+              onSave={handleSaveSyncSettings}
+              onShowNotification={showNotification}
+            />
+          )}
+
+          {adminTab === 'notifications' && (
+            <AdminNotifications
+              notificationSettings={cmsSettings.notificationSettings}
+              onSave={handleSaveNotifications}
+              onShowNotification={showNotification}
+            />
+          )}
+
           {/* Superadmin specific tabs */}
           {userRole === 'superadmin' && (
             <>
@@ -492,22 +508,6 @@ export default function App() {
 
               {adminTab === 'logs' && (
                 <AdminActivityLogs logs={logs} />
-              )}
-
-              {adminTab === 'sync' && (
-                <AdminSync
-                  syncSettings={cmsSettings.syncSettings}
-                  onSave={handleSaveSyncSettings}
-                  onShowNotification={showNotification}
-                />
-              )}
-
-              {adminTab === 'notifications' && (
-                <AdminNotifications
-                  notificationSettings={cmsSettings.notificationSettings}
-                  onSave={handleSaveNotifications}
-                  onShowNotification={showNotification}
-                />
               )}
             </>
           )}
