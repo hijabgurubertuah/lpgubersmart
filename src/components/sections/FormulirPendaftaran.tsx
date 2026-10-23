@@ -3,71 +3,93 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-// ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
-
 import React, { useState, useEffect } from 'react';
-import { Loader2, CheckCircle2, MessageCircle, X } from 'lucide-react';
-import { PackageItem, ApplicantItem } from '../../types';
-import { StorageService } from '../../services/storageService';
-import { AutoTextarea } from '../common/AutoTextarea';
+import { Loader2 } from 'lucide-react';
+import { PackageItem } from '../../types';
+
+const APPS_SCRIPT_URL = '[GANTI_DENGAN_URL_WEB_APP_ANDA]';
 
 interface FormulirPendaftaranProps {
   packages: PackageItem[];
   selectedPackageId?: string;
-  whatsappNumber: string;
-  whatsappPostRegTemplate: string;
-  onSuccessSubmit?: (applicant: ApplicantItem) => void;
+  whatsappNumber?: string;
+  whatsappPostRegTemplate?: string;
+  onSuccessSubmit?: () => void;
 }
 
 export function FormulirPendaftaran({
   packages,
   selectedPackageId,
-  whatsappNumber,
-  whatsappPostRegTemplate,
   onSuccessSubmit,
 }: FormulirPendaftaranProps) {
   const activePackages = packages.filter((p) => p.isActive).sort((a, b) => a.order - b.order);
 
-  const [name, setName] = useState('');
-  const [whatsapp, setWhatsapp] = useState('');
-  const [appType, setAppType] = useState('Website Instansi');
-  const [packageId, setPackageId] = useState(activePackages[0]?.id || '');
-  const [message, setMessage] = useState('');
+  const [nama, setNama] = useState('');
+  const [hp, setHp] = useState('');
+  const [produk, setProduk] = useState(activePackages[0]?.name || 'Website Instansi');
+  const [jumlah, setJumlah] = useState<number>(1);
+  const [catatan, setCatatan] = useState('');
+  const [honeypot, setHoneypot] = useState(''); // Bot trap
 
-  const [errors, setErrors] = useState<{ name?: string; whatsapp?: string }>({});
+  const [errors, setErrors] = useState<{ nama?: boolean; hp?: boolean; produk?: boolean }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successApplicant, setSuccessApplicant] = useState<ApplicantItem | null>(null);
+  const [isLocked, setIsLocked] = useState(false);
+  const [lockTimer, setLockTimer] = useState(0);
+  const [notification, setNotification] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
 
   useEffect(() => {
     if (selectedPackageId) {
-      setPackageId(selectedPackageId);
+      const found = activePackages.find((p) => p.id === selectedPackageId);
+      if (found) {
+        setProduk(found.name);
+      }
     }
-  }, [selectedPackageId]);
+  }, [selectedPackageId, activePackages]);
 
-  const appTypes = [
-    'Website Instansi',
-    'Toko Online',
-    'Absensi',
-    'Inventaris',
-    'Laporan Kantor',
-    'Perpustakaan',
-    'Lainnya',
-  ];
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isLocked && lockTimer > 0) {
+      timer = setInterval(() => {
+        setLockTimer((prev) => {
+          if (prev <= 1) {
+            setIsLocked(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isLocked, lockTimer]);
+
+  const showNotificationMsg = (text: string, type: 'success' | 'error') => {
+    setNotification({ text, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 500); // 0.5 seconds
+  };
 
   const validate = (): boolean => {
-    const newErrors: { name?: string; whatsapp?: string } = {};
+    const newErrors: { nama?: boolean; hp?: boolean; produk?: boolean } = {};
 
-    if (!name.trim()) {
-      newErrors.name = 'Nama lengkap harus diisi';
+    if (!nama.trim() || nama.trim().length < 3) {
+      newErrors.nama = true;
     }
 
-    const cleanPhone = whatsapp.replace(/\D/g, '');
-    if (!cleanPhone) {
-      newErrors.whatsapp = 'Nomor WhatsApp harus diisi';
-    } else if (!cleanPhone.startsWith('08') && !cleanPhone.startsWith('62')) {
-      newErrors.whatsapp = 'Format nomor harus diawali 08 atau 62';
-    } else if (cleanPhone.length < 10 || cleanPhone.length > 14) {
-      newErrors.whatsapp = 'Nomor WhatsApp tidak valid';
+    const cleanPhone = hp.replace(/\D/g, '');
+    let normalized = cleanPhone;
+    if (cleanPhone.startsWith('08')) {
+      normalized = '62' + cleanPhone.slice(1);
+    } else if (cleanPhone.startsWith('+62')) {
+      normalized = cleanPhone.slice(1);
+    }
+
+    if (!cleanPhone || normalized.length < 10 || normalized.length > 15 || (!normalized.startsWith('62'))) {
+      newErrors.hp = true;
+    }
+
+    if (!produk) {
+      newErrors.produk = true;
     }
 
     setErrors(newErrors);
@@ -76,153 +98,209 @@ export function FormulirPendaftaran({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting || isLocked) return;
+
+    // Honeypot check
+    if (honeypot.trim()) {
+      showNotificationMsg('Pesanan terkirim', 'success');
+      setNama('');
+      setHp('');
+      setCatatan('');
+      setJumlah(1);
+      return;
+    }
+
     if (!validate()) return;
 
     setIsSubmitting(true);
 
+    const cleanPhone = hp.replace(/\D/g, '');
+    let normalizedHp = cleanPhone;
+    if (cleanPhone.startsWith('08')) {
+      normalizedHp = '62' + cleanPhone.slice(1);
+    } else if (cleanPhone.startsWith('+62')) {
+      normalizedHp = cleanPhone.slice(1);
+    }
+
+    const payload = {
+      nama: nama.trim().replace(/\s+/g, ' '),
+      hp: normalizedHp,
+      produk,
+      jumlah: Number(jumlah) || 1,
+      catatan: catatan.trim(),
+    };
+
     try {
-      const selectedPkg = activePackages.find((p) => p.id === packageId) || activePackages[0];
-      const res = StorageService.addApplicant({
-        name: name.trim(),
-        whatsapp: whatsapp.trim(),
-        appType,
-        packageId: selectedPkg ? selectedPkg.id : '',
-        packageName: selectedPkg ? selectedPkg.name : '',
-        message: message.trim(),
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
+
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8',
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
       });
 
-      if (res.success) {
-        setSuccessApplicant(res.applicant);
-        if (onSuccessSubmit) onSuccessSubmit(res.applicant);
-        setName('');
-        setWhatsapp('');
-        setMessage('');
+      clearTimeout(timeoutId);
+
+      const result = await response.json();
+
+      if (result && result.ok === true) {
+        showNotificationMsg('Pesanan terkirim', 'success');
+        setNama('');
+        setHp('');
+        setCatatan('');
+        setJumlah(1);
+        setIsLocked(true);
+        setLockTimer(30);
+        if (onSuccessSubmit) onSuccessSubmit();
+      } else {
+        showNotificationMsg('Pesanan gagal terkirim, coba lagi', 'error');
       }
+    } catch {
+      showNotificationMsg('Pesanan gagal terkirim, coba lagi', 'error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleOpenWhatsApp = () => {
-    if (!successApplicant) return;
-    const cleanNumber = whatsappNumber.replace(/\D/g, '') || '6285376604024';
-    const text = whatsappPostRegTemplate
-      .replace('{name}', successApplicant.name)
-      .replace('{package}', successApplicant.packageName);
-    const url = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank', 'noopener,noreferrer');
-    setSuccessApplicant(null);
-  };
-
   return (
-    <section id="daftar" className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0B1120]">
+    <section id="daftar" className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 sm:mb-12">
-          <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
+          <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
             Formulir Pendaftaran
           </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 sm:p-10 rounded-3xl bg-slate-50 dark:bg-[#131C31] border border-slate-200/80 dark:border-slate-800 shadow-md space-y-5">
-          {/* Nama Lengkap */}
+        <form onSubmit={handleSubmit} className="p-6 sm:p-10 rounded-3xl bg-slate-50 border border-slate-200/80 shadow-md space-y-5 relative">
+          {/* Notification Toast (0.5s) */}
+          {notification && (
+            <div
+              className={`absolute top-4 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-xl text-white font-semibold text-sm shadow-lg transition-all animate-in fade-in ${
+                notification.type === 'success' ? 'bg-emerald-600' : 'bg-red-600'
+              }`}
+            >
+              {notification.text}
+            </div>
+          )}
+
+          {/* Honeypot hidden field */}
+          <div className="hidden" aria-hidden="true">
+            <input
+              type="text"
+              name="website"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
+          {/* Nama */}
           <div>
-            <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
-              Nama Lengkap *
+            <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+              Nama Lengkap
             </label>
             <input
               type="text"
-              value={name}
+              value={nama}
               onChange={(e) => {
-                setName(e.target.value);
-                if (errors.name) setErrors({ ...errors, name: undefined });
+                setNama(e.target.value);
+                if (errors.nama) setErrors({ ...errors, nama: false });
               }}
-              placeholder="Ahmad Pratama"
-              className="w-full h-12 px-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-base text-slate-900 dark:text-[#E5E7EB] focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+              placeholder="Nama lengkap"
+              className={`w-full h-11 sm:h-12 px-3.5 rounded-xl border bg-white text-base text-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
+                errors.nama ? 'border-red-500' : 'border-slate-300'
+              }`}
             />
-            {errors.name && (
-              <p className="text-xs font-semibold text-red-500 mt-1">{errors.name}</p>
-            )}
           </div>
 
           {/* Nomor WhatsApp */}
           <div>
-            <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
-              Nomor WhatsApp *
+            <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+              Nomor WhatsApp
             </label>
             <input
               type="tel"
-              value={whatsapp}
+              value={hp}
               onChange={(e) => {
-                setWhatsapp(e.target.value);
-                if (errors.whatsapp) setErrors({ ...errors, whatsapp: undefined });
+                setHp(e.target.value);
+                if (errors.hp) setErrors({ ...errors, hp: false });
               }}
               placeholder="081234567890"
-              className="w-full h-12 px-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-base text-slate-900 dark:text-[#E5E7EB] focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+              className={`w-full h-11 sm:h-12 px-3.5 rounded-xl border bg-white text-base text-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
+                errors.hp ? 'border-red-500' : 'border-slate-300'
+              }`}
             />
-            {errors.whatsapp && (
-              <p className="text-xs font-semibold text-red-500 mt-1">{errors.whatsapp}</p>
-            )}
           </div>
 
-          {/* Jenis Aplikasi */}
+          {/* Produk atau Paket */}
           <div>
-            <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
-              Jenis Aplikasi *
+            <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+              Produk atau Paket
             </label>
             <select
-              value={appType}
-              onChange={(e) => setAppType(e.target.value)}
-              className="w-full h-12 px-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-base text-slate-900 dark:text-[#E5E7EB] focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
-            >
-              {appTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Paket */}
-          <div>
-            <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
-              Paket Belajar *
-            </label>
-            <select
-              value={packageId}
-              onChange={(e) => setPackageId(e.target.value)}
-              className="w-full h-12 px-3.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B1120] text-base text-slate-900 dark:text-[#E5E7EB] focus:border-indigo-600 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+              value={produk}
+              onChange={(e) => {
+                setProduk(e.target.value);
+                if (errors.produk) setErrors({ ...errors, produk: false });
+              }}
+              className={`w-full h-11 sm:h-12 px-3.5 rounded-xl border bg-white text-base text-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 ${
+                errors.produk ? 'border-red-500' : 'border-slate-300'
+              }`}
             >
               {activePackages.map((pkg) => (
-                <option key={pkg.id} value={pkg.id}>
+                <option key={pkg.id} value={pkg.name}>
                   {pkg.name} ({pkg.price})
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Pesan Opsional */}
+          {/* Jumlah */}
           <div>
-            <label className="block text-sm font-semibold text-slate-800 dark:text-slate-200 mb-1.5">
-              Pesan
+            <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+              Jumlah
             </label>
-            <AutoTextarea
-              value={message}
-              onValueChange={setMessage}
-              placeholder=""
+            <input
+              type="number"
+              min={1}
+              value={jumlah}
+              onChange={(e) => setJumlah(Math.max(1, parseInt(e.target.value) || 1))}
+              className="w-full h-11 sm:h-12 px-3.5 rounded-xl border border-slate-300 bg-white text-base text-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-600"
+            />
+          </div>
+
+          {/* Catatan */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+              Catatan
+            </label>
+            <textarea
+              value={catatan}
+              onChange={(e) => setCatatan(e.target.value)}
+              placeholder="Catatan opsional"
+              rows={3}
+              className="w-full p-3.5 rounded-xl border border-slate-300 bg-white text-base text-slate-900 focus:outline-none focus:ring-1 focus:ring-indigo-600 resize-none"
             />
           </div>
 
           <div className="pt-2">
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full h-13 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-lg shadow-orange-500/25 active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              disabled={isSubmitting || isLocked}
+              className="w-full h-12 sm:h-13 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-base shadow-lg shadow-orange-500/25 active:scale-98 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
                   <span>Memproses...</span>
                 </>
+              ) : isLocked ? (
+                <span>Terkunci ({lockTimer}s)</span>
               ) : (
                 'Kirim Pendaftaran'
               )}
@@ -230,55 +308,6 @@ export function FormulirPendaftaran({
           </div>
         </form>
       </div>
-
-      {/* Success Dialog Modal */}
-      {successApplicant && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div
-            className="w-full max-w-md bg-white dark:bg-[#131C31] rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800 text-center animate-in zoom-in-95 duration-150 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setSuccessApplicant(null)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xl"
-              aria-label="Tutup"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="w-16 h-16 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-5 shadow-inner">
-              <CheckCircle2 className="w-9 h-9" />
-            </div>
-
-            <h3 className="font-display font-bold text-2xl text-slate-900 dark:text-white mb-2">
-              Pendaftaran Terkirim
-            </h3>
-
-            <p className="text-base text-slate-600 dark:text-slate-300 mb-6">
-              Terima kasih, data pendaftaran Anda telah tercatat dengan baik.
-            </p>
-
-            <div className="flex flex-col gap-3">
-              <button
-                type="button"
-                onClick={handleOpenWhatsApp}
-                className="w-full h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-base flex items-center justify-center gap-2 shadow-md transition-colors"
-              >
-                <MessageCircle className="w-5 h-5" />
-                <span>Lanjut ke WhatsApp</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setSuccessApplicant(null)}
-                className="w-full h-12 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-base hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-              >
-                Tutup
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

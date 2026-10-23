@@ -30,6 +30,7 @@ import {
   Menu,
   X,
   ArrowLeft,
+  Bell,
 } from 'lucide-react';
 import { UserRole } from '../../types';
 
@@ -51,7 +52,8 @@ export type AdminTab =
   | 'media'
   | 'seoTrackers'
   | 'logs'
-  | 'sync';
+  | 'sync'
+  | 'notifications';
 
 interface AdminLayoutProps {
   currentRole: UserRole;
@@ -110,6 +112,7 @@ export function AdminLayout({
     { id: 'seoTrackers', label: 'SEO dan Pelacak', icon: Globe, superadminOnly: true },
     { id: 'logs', label: 'Log Aktivitas', icon: History, superadminOnly: true },
     { id: 'sync', label: 'Sinkronisasi', icon: RefreshCw, superadminOnly: true },
+    { id: 'notifications', label: 'Notifikasi', icon: Bell, superadminOnly: true },
     // General
     { id: 'password', label: 'Kata Sandi', icon: KeyRound },
   ];

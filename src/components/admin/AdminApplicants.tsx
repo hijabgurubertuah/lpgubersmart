@@ -109,6 +109,39 @@ export function AdminApplicants({
     onShowNotification('Berhasil disimpan');
   };
 
+  const handleResendNotification = async (a: ApplicantItem) => {
+    const cms = StorageService.getCmsSettings();
+    if (!cms.syncSettings.webAppUrl) {
+      onShowNotification('URL Web App belum diatur', 'error');
+      return;
+    }
+    try {
+      const res = await fetch(cms.syncSettings.webAppUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'resendNotification',
+          token: cms.syncSettings.token,
+          applicantId: a.id,
+        }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        const updated = applicants.map((item) =>
+          item.id === a.id ? { ...item, adminNotifStatus: 'Terkirim' as const, userNotifStatus: 'Terkirim' as const } : item
+        );
+        onUpdateApplicants(updated);
+        StorageService.saveApplicants(updated);
+        StorageService.logActivity('admin', 'Kirim Ulang Notifikasi', `Mengirim ulang notifikasi WhatsApp untuk pendaftar ${a.name}.`);
+        onShowNotification('Notifikasi berhasil dikirim ulang');
+      } else {
+        onShowNotification('Gagal mengirim ulang notifikasi', 'error');
+      }
+    } catch {
+      onShowNotification('Gagal mengirim ulang notifikasi', 'error');
+    }
+  };
+
   // Download CSV
   const handleDownloadCsv = () => {
     const headers = ['ID', 'Nama', 'Nomor WhatsApp', 'Jenis Aplikasi', 'Paket', 'Status', 'Waktu', 'Catatan'];
@@ -270,6 +303,7 @@ export function AdminApplicants({
                     <th className="p-4">Aplikasi & Paket</th>
                     <th className="p-4">Waktu</th>
                     <th className="p-4">Status</th>
+                    <th className="p-4">Notifikasi</th>
                     <th className="p-4 text-right">Aksi</th>
                   </tr>
                 </thead>
@@ -329,6 +363,26 @@ export function AdminApplicants({
                           <option value="Dihubungi">Dihubungi</option>
                           <option value="Selesai">Selesai</option>
                         </select>
+                      </td>
+                      <td className="p-4">
+                        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-md ${
+                          (a.adminNotifStatus || 'Terkirim') === 'Terkirim'
+                            ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                            : (a.adminNotifStatus === 'Gagal' || a.adminNotifStatus === 'Ditunda')
+                            ? 'bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300'
+                            : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                        }`}>
+                          {a.adminNotifStatus || 'Terkirim'}
+                        </span>
+                        {(a.adminNotifStatus === 'Gagal' || a.adminNotifStatus === 'Ditunda') && (
+                          <button
+                            type="button"
+                            onClick={() => handleResendNotification(a)}
+                            className="block mt-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+                          >
+                            Kirim Ulang
+                          </button>
+                        )}
                       </td>
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">

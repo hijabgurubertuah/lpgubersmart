@@ -61,6 +61,7 @@ import { AdminMedia } from './components/admin/AdminMedia';
 import { AdminSeoTrackers } from './components/admin/AdminSeoTrackers';
 import { AdminActivityLogs } from './components/admin/AdminActivityLogs';
 import { AdminSync } from './components/admin/AdminSync';
+import { AdminNotifications } from './components/admin/AdminNotifications';
 
 export default function App() {
   // Auth State
@@ -315,6 +316,14 @@ export default function App() {
     showNotification('Berhasil disimpan');
   };
 
+  const handleSaveNotifications = async (notificationSettings: typeof cmsSettings.notificationSettings) => {
+    const updated = { ...cmsSettings, notificationSettings };
+    setCmsSettings(updated);
+    StorageService.saveCmsSettings(updated);
+    await StorageService.pushSettingsToSheet({ notificationSettings });
+    showNotification('Berhasil disimpan');
+  };
+
   // --- Route rendering logic ---
   const isAdminRoute = currentHash.startsWith('#/admin');
   const isPrivacyRoute = currentHash === '#/kebijakan-privasi';
@@ -489,6 +498,14 @@ export default function App() {
                 <AdminSync
                   syncSettings={cmsSettings.syncSettings}
                   onSave={handleSaveSyncSettings}
+                  onShowNotification={showNotification}
+                />
+              )}
+
+              {adminTab === 'notifications' && (
+                <AdminNotifications
+                  notificationSettings={cmsSettings.notificationSettings}
+                  onSave={handleSaveNotifications}
                   onShowNotification={showNotification}
                 />
               )}

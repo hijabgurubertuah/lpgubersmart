@@ -71,6 +71,12 @@ export function AdminIdentity({ identity, onSave }: AdminIdentityProps) {
           onChange={(img) => updateField('logo', img)}
         />
 
+        <ImageField
+          label="Favicon"
+          image={draft.favicon}
+          onChange={(img) => updateField('favicon', img)}
+        />
+
         <div>
           <label className="text-xs font-semibold text-slate-500 block mb-1">Judul Halaman (Browser Title)</label>
           <input

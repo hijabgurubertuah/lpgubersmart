@@ -150,6 +150,9 @@ export interface ApplicantItem {
   createdAt: string;
   notes?: string;
   isDuplicate?: boolean;
+  adminNotifStatus?: 'Terkirim' | 'Gagal' | 'Ditunda' | 'Nonaktif';
+  userNotifStatus?: 'Terkirim' | 'Gagal' | 'Ditunda' | 'Nonaktif';
+  sentTime?: string;
 }
 
 export interface ActivityLogItem {
@@ -168,12 +171,22 @@ export interface SectionConfig {
   order: number;
 }
 
+export interface NotificationSettings {
+  adminEnabled: boolean;
+  userEnabled: boolean;
+  recipientNumbers: string;
+  hourlyLimit: number;
+  adminTemplate: string;
+  userTemplate: string;
+  fonnteToken: string;
+}
+
 export interface CmsSettings {
   identity: {
     appName: string;
     slogan: string;
     logo: ImageRef;
-    favicon: string;
+    favicon: ImageRef;
     pageTitle: string;
     pageDescription: string;
   };
@@ -261,4 +274,5 @@ export interface CmsSettings {
       accounts: string;
     };
   };
+  notificationSettings: NotificationSettings;
 }

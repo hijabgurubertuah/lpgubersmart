@@ -32,7 +32,10 @@ export const INITIAL_CMS_SETTINGS: CmsSettings = {
       source: 'tautan',
       value: '',
     },
-    favicon: '',
+    favicon: {
+      source: 'tautan',
+      value: '',
+    },
     pageTitle: 'Guber Smart - Ubah Ide Menjadi Aplikasi, Tanpa Perlu Koding',
     pageDescription: 'Ubah Ide Menjadi Aplikasi, Tanpa Perlu Koding. Belajar membuat aplikasi web profesional dan mudah dipahami bersama Guber Smart.',
   },
@@ -152,6 +155,15 @@ export const INITIAL_CMS_SETTINGS: CmsSettings = {
       logs: 'LogAktivitas',
       accounts: 'Akun',
     },
+  },
+  notificationSettings: {
+    adminEnabled: true,
+    userEnabled: true,
+    recipientNumbers: '085376604024',
+    hourlyLimit: 20,
+    adminTemplate: 'Pendaftar baru Guber Smart.\\nNama: {nama}\\nWhatsApp: {nomor}\\nPaket: {paket}\\nJenis aplikasi: {jenis_aplikasi}\\nPesan: {pesan}\\nWaktu: {waktu}',
+    userTemplate: 'Halo {nama}, terima kasih sudah mendaftar di Guber Smart. Pendaftaran Anda untuk {paket} sudah kami terima dan tim kami akan menghubungi Anda secepatnya lewat WhatsApp ini. Jika Anda tidak merasa mendaftar, abaikan pesan ini. Salam, Guber Smart.',
+    fonnteToken: '',
   },
 };
 

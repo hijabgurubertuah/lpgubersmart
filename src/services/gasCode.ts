@@ -6,8 +6,7 @@
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
 export const APPS_SCRIPT_TEMPLATE = `/**
- * Google Apps Script Backend - Guber Smart
- * Web App Endpoint & Google Sheets / Drive Sync
+ * Google Apps Script Backend - Guber Smart with Fonnte WhatsApp & Drive Sync
  */
 
 const CONFIG = {
@@ -66,12 +65,61 @@ function handleRequest(e) {
       return jsonResponse({ success: true, base64: "data:" + mimeType + ";base64," + base64 });
     }
 
-    // 3. Tambah Pendaftar Baru (Publik diperbolehkan)
+    // 3. Tambah Pendaftar Baru & Kirim WhatsApp Fonnte (Publik)
     if (action === "submitApplicant") {
       var applicant = postData.applicant || {};
       var ss = getSpreadsheet();
+      var settings = readSheetAsKeyValue(ss, CONFIG.SHEETS.SETTINGS);
+      
+      var adminEnabled = settings.adminEnabled !== "false";
+      var userEnabled = settings.userEnabled !== "false";
+      var recipientNumbers = settings.recipientNumbers || "085376604024";
+      var hourlyLimit = Number(settings.hourlyLimit || 20);
+      var fonnteToken = settings.fonnteToken || "";
+      var adminTemplate = settings.adminTemplate || "Pendaftar baru Guber Smart.\\nNama: {nama}\\nWhatsApp: {nomor}\\nPaket: {paket}\\nJenis aplikasi: {jenis_aplikasi}\\nPesan: {pesan}\\nWaktu: {waktu}";
+      var userTemplate = settings.userTemplate || "Halo {nama}, terima kasih sudah mendaftar di Guber Smart. Pendaftaran Anda untuk {paket} sudah kami terima dan tim kami akan menghubungi Anda secepatnya lewat WhatsApp ini.";
+
+      var adminStatus = "Nonaktif";
+      var userStatus = "Nonaktif";
+      var sentTime = new Date().toISOString();
+
+      if (fonnteToken) {
+        var limitOk = checkHourlyLimit(ss, hourlyLimit);
+        if (!limitOk) {
+          adminStatus = "Ditunda";
+          userStatus = "Ditunda";
+        } else {
+          // Send admin notification
+          if (adminEnabled) {
+            var adminMsg = renderTemplate(adminTemplate, applicant);
+            var numbers = recipientNumbers.split(",");
+            var allAdminOk = true;
+            for (var n = 0; n < numbers.length; n++) {
+              var num = formatPhone(numbers[n].trim());
+              if (num) {
+                var resAdmin = sendFonnte(fonnteToken, num, adminMsg);
+                if (!resAdmin.success) allAdminOk = false;
+              }
+            }
+            adminStatus = allAdminOk ? "Terkirim" : "Gagal";
+          }
+
+          // Send user auto-reply (check duplicate in last 24h)
+          if (userEnabled && !applicant.isDuplicate) {
+            var userMsg = renderTemplate(userTemplate, applicant);
+            var userNum = formatPhone(applicant.whatsapp || "");
+            if (userNum) {
+              var resUser = sendFonnte(fonnteToken, userNum, userMsg);
+              userStatus = resUser.success ? "Terkirim" : "Gagal";
+            }
+          } else {
+            userStatus = "Nonaktif";
+          }
+        }
+      }
+
       var sheet = getOrCreateSheet(ss, CONFIG.SHEETS.APPLICANTS, [
-        "ID", "Nama", "Nomor WhatsApp", "Jenis Aplikasi", "Paket", "Status", "Waktu", "Catatan"
+        "ID", "Nama", "Nomor WhatsApp", "Jenis Aplikasi", "Paket", "Status", "Waktu", "Catatan", "Status Notifikasi Admin", "Status Balasan Pendaftar", "Waktu Kirim"
       ]);
       sheet.appendRow([
         applicant.id || ("APP-" + new Date().getTime()),
@@ -80,13 +128,17 @@ function handleRequest(e) {
         applicant.appType || "",
         applicant.packageName || "",
         applicant.status || "Baru",
-        applicant.createdAt || new Date().toISOString(),
-        applicant.notes || ""
+        applicant.createdAt || sentTime,
+        applicant.notes || "",
+        adminStatus,
+        userStatus,
+        sentTime
       ]);
-      return jsonResponse({ success: true, message: "Berhasil disimpan" });
+
+      return jsonResponse({ success: true, message: "Berhasil disimpan", adminNotifStatus: adminStatus, userNotifStatus: userStatus });
     }
 
-    // 4. Verifikasi Login (Publik -> mencocokkan hash)
+    // 4. Verifikasi Login (Publik)
     if (action === "verifyLogin") {
       var password = postData.password || "";
       var role = verifyAccountPassword(password);
@@ -96,6 +148,72 @@ function handleRequest(e) {
       return jsonResponse({ success: false, message: "Kata sandi salah" });
     }
 
+    // 5. Uji Kirim Fonnte
+    if (action === "testFonnte") {
+      var fonnteToken = postData.fonnteToken || params.fonnteToken || "";
+      var recipientNumbers = postData.recipientNumbers || "085376604024";
+      var template = postData.template || "Pesan Uji Fonnte Guber Smart.";
+      var testData = { name: "Penguji", whatsapp: "081234567890", packageName: "Paket Tes", appType: "Web", message: "Tes", waktu: new Date().toLocaleString() };
+      var msg = renderTemplate(template, testData);
+      var numbers = recipientNumbers.split(",");
+      var success = false;
+      for (var i = 0; i < numbers.length; i++) {
+        var num = formatPhone(numbers[i].trim());
+        if (num) {
+          var r = sendFonnte(fonnteToken, num, msg);
+          if (r.success) success = true;
+        }
+      }
+      return jsonResponse({ success: success });
+    }
+
+    // 6. Kirim Ulang Notifikasi Pendaftar
+    if (action === "resendNotification") {
+      var applicantId = postData.applicantId;
+      var ss = getSpreadsheet();
+      var applicants = readSheetAsObjects(ss, CONFIG.SHEETS.APPLICANTS);
+      var targetApp = null;
+      var rowIndex = -1;
+      for (var i = 0; i < applicants.length; i++) {
+        if (applicants[i]["ID"] == applicantId) {
+          targetApp = applicants[i];
+          rowIndex = i + 2; // header offset
+          break;
+        }
+      }
+      if (!targetApp) return jsonResponse({ success: false, message: "Pendaftar tidak ditemukan" });
+
+      var settings = readSheetAsKeyValue(ss, CONFIG.SHEETS.SETTINGS);
+      var fonnteToken = settings.fonnteToken || "";
+      var recipientNumbers = settings.recipientNumbers || "085376604024";
+      var adminTemplate = settings.adminTemplate || "Pendaftar baru Guber Smart. Nama: {nama}";
+      
+      var adminMsg = renderTemplate(adminTemplate, {
+        name: targetApp["Nama"],
+        whatsapp: targetApp["Nomor WhatsApp"],
+        packageName: targetApp["Paket"],
+        appType: targetApp["Jenis Aplikasi"],
+        message: targetApp["Catatan"] || "",
+        waktu: targetApp["Waktu"]
+      });
+
+      var numbers = recipientNumbers.split(",");
+      var ok = false;
+      for (var n = 0; n < numbers.length; n++) {
+        var num = formatPhone(numbers[n].trim());
+        if (num) {
+          var r = sendFonnte(fonnteToken, num, adminMsg);
+          if (r.success) ok = true;
+        }
+      }
+
+      if (ok) {
+        ss.getSheetByName(CONFIG.SHEETS.APPLICANTS).getRange(rowIndex, 9, 1, 3).setValues([["Terkirim", "Terkirim", new Date().toISOString()]]);
+        return jsonResponse({ success: true });
+      }
+      return jsonResponse({ success: false, message: "Gagal kirim Fonnte" });
+    }
+
     // Aksi di bawah ini MEMERLUKAN token sah
     if (token !== CONFIG.TOKEN) {
       return jsonResponse({ success: false, message: "Akses ditolak" });
@@ -103,7 +221,7 @@ function handleRequest(e) {
 
     var ss = getSpreadsheet();
 
-    // 5. Ubah Kata Sandi
+    // 7. Ubah Kata Sandi
     if (action === "changePassword") {
       var targetRole = postData.targetRole || "admin";
       var newPassword = postData.newPassword || "";
@@ -111,7 +229,7 @@ function handleRequest(e) {
       return jsonResponse({ success: true, message: "Berhasil disimpan" });
     }
 
-    // 6. Unggah File ke Drive
+    // 8. Unggah File ke Drive
     if (action === "uploadFile") {
       var folder = CONFIG.DRIVE_FOLDER_ID ? DriveApp.getFolderById(CONFIG.DRIVE_FOLDER_ID) : DriveApp.getRootFolder();
       var base64Data = postData.base64Data || "";
@@ -132,7 +250,7 @@ function handleRequest(e) {
       });
     }
 
-    // 7. Hapus File Drive
+    // 9. Hapus File Drive
     if (action === "deleteFile") {
       var fileId = postData.fileId;
       if (fileId) {
@@ -142,7 +260,7 @@ function handleRequest(e) {
       return jsonResponse({ success: true, message: "Berhasil dihapus" });
     }
 
-    // 8. Tarik Semua Data
+    // 10. Tarik Semua Data
     if (action === "getAllData") {
       return jsonResponse({
         success: true,
@@ -154,29 +272,29 @@ function handleRequest(e) {
       });
     }
 
-    // 9. Simpan Pengaturan
+    // 11. Simpan Pengaturan
     if (action === "saveSettings") {
       var settingsMap = postData.settings || {};
       writeKeyValueToSheet(ss, CONFIG.SHEETS.SETTINGS, settingsMap);
       return jsonResponse({ success: true, message: "Berhasil disimpan" });
     }
 
-    // 10. Update Pendaftar
+    // 12. Update Pendaftar
     if (action === "updateApplicant") {
       var updated = postData.applicant;
       updateRowInSheet(ss, CONFIG.SHEETS.APPLICANTS, updated.id, [
-        updated.id, updated.name, updated.whatsapp, updated.appType, updated.packageName, updated.status, updated.createdAt, updated.notes || ""
+        updated.id, updated.name, updated.whatsapp, updated.appType, updated.packageName, updated.status, updated.createdAt, updated.notes || "", updated.adminNotifStatus || "Terkirim", updated.userNotifStatus || "Terkirim", updated.sentTime || new Date().toISOString()
       ]);
       return jsonResponse({ success: true, message: "Berhasil disimpan" });
     }
 
-    // 11. Hapus Pendaftar
+    // 13. Hapus Pendaftar
     if (action === "deleteApplicant") {
       deleteRowInSheet(ss, CONFIG.SHEETS.APPLICANTS, postData.id);
       return jsonResponse({ success: true, message: "Berhasil dihapus" });
     }
 
-    // 12. Simpan Log Aktivitas
+    // 14. Simpan Log Aktivitas
     if (action === "logActivity") {
       var log = postData.log || {};
       var sheet = getOrCreateSheet(ss, CONFIG.SHEETS.LOGS, ["ID", "Peran", "Aksi", "Rincian", "Waktu"]);
@@ -197,6 +315,56 @@ function handleRequest(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+function sendFonnte(token, target, message) {
+  if (!token || !target || !message) return { success: false };
+  try {
+    var options = {
+      method: "post",
+      headers: { "Authorization": token },
+      payload: { target: target, message: message },
+      muteHttpExceptions: true
+    };
+    var response = UrlFetchApp.fetch("https://api.fonnte.com/send", options);
+    var json = JSON.parse(response.getContentText());
+    return { success: !!json.status };
+  } catch (err) {
+    return { success: false };
+  }
+}
+
+function formatPhone(phone) {
+  var clean = phone.replace(/\\D/g, "");
+  if (clean.startsWith("0")) {
+    return "62" + clean.substring(1);
+  }
+  return clean;
+}
+
+function checkHourlyLimit(ss, limit) {
+  var sheet = getOrCreateSheet(ss, "LogKirim", ["Waktu"]);
+  var now = new Date().getTime();
+  var oneHourAgo = now - 3600000;
+  var rows = sheet.getDataRange().getValues();
+  var count = 0;
+  for (var i = 1; i < rows.length; i++) {
+    var t = new Date(rows[i][0]).getTime();
+    if (t > oneHourAgo) count++;
+  }
+  if (count >= limit) return false;
+  sheet.appendRow([new Date().toISOString()]);
+  return true;
+}
+
+function renderTemplate(template, data) {
+  return template
+    .replace(/{nama}/g, data.name || data.Nama || "")
+    .replace(/{nomor}/g, data.whatsapp || data["Nomor WhatsApp"] || "")
+    .replace(/{paket}/g, data.packageName || data.Paket || "")
+    .replace(/{jenis_aplikasi}/g, data.appType || data["Jenis Aplikasi"] || "")
+    .replace(/{pesan}/g, data.message || data.Catatan || "")
+    .replace(/{waktu}/g, data.createdAt || data.Waktu || new Date().toLocaleString());
 }
 
 function getSpreadsheet() {
@@ -224,7 +392,6 @@ function verifyAccountPassword(plainPassword) {
   var rows = sheet.getDataRange().getValues();
   
   if (rows.length <= 1) {
-    // Seed default accounts
     var adminSalt = "salt_admin_2026";
     var superadminSalt = "salt_super_2026";
     var adminHash = hashWithSalt("admin123", adminSalt);
