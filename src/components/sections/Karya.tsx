@@ -5,7 +5,7 @@
 
 // ATURAN BAKU: lihat designSystem. UI harus selalu minimalis, bersih, dan tanpa teks petunjuk.
 
-import { useState, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, X, ExternalLink } from 'lucide-react';
 import { PortfolioItem, PortfolioCategory } from '../../types';
 import { ResolvedImage } from '../common/ResolvedImage';
@@ -17,6 +17,7 @@ interface KaryaProps {
 export function Karya({ portfolio }: KaryaProps) {
   const [activeCategory, setActiveCategory] = useState<PortfolioCategory>('Semua');
   const [previewItem, setPreviewItem] = useState<PortfolioItem | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   const categories: PortfolioCategory[] = ['Semua', 'Website', 'Toko', 'Administrasi'];
@@ -25,6 +26,31 @@ export function Karya({ portfolio }: KaryaProps) {
     .filter((item) => item.isVisible)
     .filter((item) => (activeCategory === 'Semua' ? true : item.category === activeCategory))
     .sort((a, b) => a.order - b.order);
+
+  // Duplicate items for seamless infinite scroll
+  const displayItems = [...filteredItems, ...filteredItems];
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container || filteredItems.length === 0) return;
+
+    let animationFrameId: number;
+    const speed = 0.8; // scroll speed
+
+    const step = () => {
+      if (!isPaused && container) {
+        container.scrollLeft += speed;
+        const halfWidth = container.scrollWidth / 2;
+        if (container.scrollLeft >= halfWidth) {
+          container.scrollLeft = 0;
+        }
+      }
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPaused, filteredItems.length]);
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
@@ -37,11 +63,11 @@ export function Karya({ portfolio }: KaryaProps) {
   };
 
   return (
-    <section id="karya" className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-[#0B1120]">
+    <section id="karya" className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
           <div>
-            <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 dark:text-white tracking-tight">
+            <h2 className="font-display font-extrabold text-2xl sm:text-4xl text-slate-900 tracking-tight">
               Karya Nyata Peserta
             </h2>
           </div>
@@ -51,7 +77,7 @@ export function Karya({ portfolio }: KaryaProps) {
             <button
               type="button"
               onClick={() => handleScroll('left')}
-              className="w-11 h-11 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="w-11 h-11 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors"
               aria-label="Sebelumnya"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -59,7 +85,7 @@ export function Karya({ portfolio }: KaryaProps) {
             <button
               type="button"
               onClick={() => handleScroll('right')}
-              className="w-11 h-11 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="w-11 h-11 rounded-xl border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 transition-colors"
               aria-label="Berikutnya"
             >
               <ChevronRight className="w-5 h-5" />
@@ -77,7 +103,7 @@ export function Karya({ portfolio }: KaryaProps) {
               className={`h-10 px-4 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap shrink-0 ${
                 activeCategory === cat
                   ? 'bg-indigo-600 text-white shadow-xs'
-                  : 'bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
               {cat}
@@ -88,15 +114,19 @@ export function Karya({ portfolio }: KaryaProps) {
         {/* Carousel / Scroll container */}
         <div
           ref={scrollRef}
-          className="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-4 pt-1 scroll-smooth"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
+          className="flex gap-5 overflow-x-auto snap-x snap-mandatory pb-4 pt-1 scroll-smooth scrollbar-none"
         >
-          {filteredItems.map((item) => (
+          {displayItems.map((item, idx) => (
             <div
-              key={item.id}
+              key={`${item.id}-${idx}`}
               onClick={() => setPreviewItem(item)}
-              className="w-[280px] sm:w-[320px] shrink-0 snap-start group cursor-pointer rounded-2xl overflow-hidden bg-slate-50 dark:bg-[#131C31] border border-slate-200/80 dark:border-slate-800 hover:border-indigo-500/50 transition-all hover:shadow-lg"
+              className="w-[280px] sm:w-[320px] shrink-0 snap-start group cursor-pointer rounded-2xl overflow-hidden bg-slate-50 border border-slate-200/80 hover:border-indigo-500/50 transition-all hover:shadow-lg"
             >
-              <div className="aspect-[4/3] bg-slate-200 dark:bg-slate-800 overflow-hidden relative">
+              <div className="aspect-[4/3] bg-slate-200 overflow-hidden relative">
                 <ResolvedImage
                   image={item.image}
                   alt={item.title}
@@ -107,10 +137,10 @@ export function Karya({ portfolio }: KaryaProps) {
                 </div>
               </div>
               <div className="p-4 sm:p-5">
-                <span className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 block mb-1">
+                <span className="text-xs font-semibold text-indigo-600 block mb-1">
                   {item.category}
                 </span>
-                <h3 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white truncate">
+                <h3 className="font-display font-bold text-base sm:text-lg text-slate-900 truncate">
                   {item.title}
                 </h3>
               </div>
